@@ -15,7 +15,7 @@ test('the collection paints and preserves an album choice while the app download
   });
   try {
     await page.goto('./', { waitUntil: 'domcontentloaded' });
-    await expect(page.getByRole('heading', { level: 1 })).toContainText('Três eras');
+    await expect(page.getByRole('heading', { level: 1 })).toContainText('Cada era,');
     const album = page.getByRole('button', { name: /explorar folklore/i });
     await album.click();
     release();

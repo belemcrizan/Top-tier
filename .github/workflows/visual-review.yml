@@ -1,0 +1,57 @@
+name: Visual review
+
+on: pull_request
+
+permissions:
+  contents: read
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      VITE_BASE_PATH: /${{ github.event.repository.name }}/
+      BASE_SHA: ${{ github.event.pull_request.base.sha }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      HUSKY: '0'
+    steps:
+      - name: Check out PR base
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: before
+          persist-credentials: false
+      - name: Check out PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: after
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: |
+            before/package-lock.json
+            after/package-lock.json
+      - name: Build original version
+        working-directory: before
+        run: |
+          npm ci
+          npm run build
+      - name: Build revised version
+        working-directory: after
+        run: |
+          npm ci
+          npm run build
+          npx playwright install --with-deps chromium
+      - name: Capture both versions and verify the revised interface
+        working-directory: after
+        run: node --import tsx scripts/visual/review.ts ../before
+      - name: Upload before-and-after gallery
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: top-tier-visual-review
+          path: after/visual-report/
+          if-no-files-found: ignore

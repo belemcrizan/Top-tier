@@ -31,6 +31,22 @@ test('restores a returning listener’s theme, language and ranking route on rel
     'page',
   );
   await page.getByRole('button', { name: 'Details for champagne problems' }).click();
-  await expect(page.getByRole('dialog')).toBeVisible();
+  const dialog = page.getByRole('dialog');
+  await expect(dialog).toBeVisible();
+  await dialog.getByRole('button', { name: 'Add to favorites' }).click();
+  const slider = dialog.getByRole('slider', { name: 'Your score' });
+  await slider.press('Home');
+  await slider.press('ArrowRight');
+  await expect(slider).toHaveValue('1');
+  await dialog.getByRole('button', { name: 'Save score' }).click();
+  await expect(dialog).not.toBeVisible();
+  await page.reload();
+  await page.getByRole('searchbox', { name: 'Search for a song' }).fill('champagne problems');
+  await page.getByRole('button', { name: 'Details for champagne problems' }).click();
+  await expect(slider).toHaveValue('1');
+  await expect(dialog.getByRole('button', { name: 'Remove from favorites' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
   expect(errors).toEqual([]);
 });

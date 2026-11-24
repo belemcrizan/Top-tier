@@ -12,3 +12,4 @@ coverage/
 lighthouse-report/
 playwright-report/
 test-results/
+visual-report/
