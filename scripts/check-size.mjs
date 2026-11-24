@@ -25,6 +25,13 @@ const sizes = await Promise.all(
     return gzipSync(bytes).length;
   }),
 );
-const sum = sizes.reduce((total, size) => total + size, 0);
-console.log(`Initial JavaScript: ${(sum / 1000).toFixed(1)} kB gzip (${files.length} files)`);
+// The small theme/route bootstrap ships inline with the HTML and counts toward the JS budget.
+const inlineScripts = [...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)]
+  .map((match) => match[1].trim())
+  .filter(Boolean);
+const inlineSize = inlineScripts.reduce((bytes, code) => bytes + gzipSync(code).length, 0);
+const sum = sizes.reduce((total, size) => total + size, inlineSize);
+console.log(
+  `Initial JavaScript: ${(sum / 1000).toFixed(1)} kB gzip (${files.length} files, ${inlineScripts.length} inline)`,
+);
 if (!files.length || sum >= 120_000) process.exitCode = 1;

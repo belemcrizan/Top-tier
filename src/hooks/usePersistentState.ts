@@ -12,6 +12,10 @@ const subscribeToHydration = (): (() => void) => () => {};
 const client = (): boolean => true;
 const server = (): boolean => false;
 
+export function useHydrated(): boolean {
+  return useSyncExternalStore(subscribeToHydration, client, server);
+}
+
 export function usePersistentState<T>(
   key: string,
   parse: (raw: string | null) => T,
@@ -21,7 +25,7 @@ export function usePersistentState<T>(
   const [value, setValue] = useReducer(applyUpdate<T>, key, (storedKey) =>
     parse(safeRead(storedKey)),
   );
-  const useLocalValue = useSyncExternalStore(subscribeToHydration, client, server);
+  const useLocalValue = useHydrated();
   const [available, setAvailable] = useState(true);
   useEffect(() => {
     try {

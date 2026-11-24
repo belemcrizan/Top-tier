@@ -8,6 +8,7 @@ import type { AlbumId } from '../data/rankings';
 import Collection from '../features/collection/Collection';
 import RankingView from '../features/ranking/RankingView';
 import { useHashRoute } from '../hooks/useHashRoute';
+import { useHydrated } from '../hooks/usePersistentState';
 import { useI18n } from '../i18n';
 import { useRanking } from './RankingProvider';
 import { useTheme } from '../hooks/useTheme';
@@ -23,6 +24,7 @@ export default function App(): JSX.Element {
   const { route, navigate } = useHashRoute();
   const { t } = useI18n();
   const { theme, toggle } = useTheme();
+  const hydrated = useHydrated();
   const { personalSongs } = useRanking();
   const [albumId, setAlbumId] = useState<AlbumId>(albums[0].id);
   const main = useRef<HTMLElement>(null);
@@ -35,9 +37,11 @@ export default function App(): JSX.Element {
     }
   }, [route.page]);
   useEffect(() => {
+    // Keep the early theme from the HTML until React has restored the local preference.
+    if (!hydrated) return;
     document.documentElement.dataset.theme = theme;
     document.documentElement.dataset.era = albumId;
-  }, [theme, albumId]);
+  }, [theme, albumId, hydrated]);
   let page: JSX.Element;
   switch (route.page) {
     case 'collection':
