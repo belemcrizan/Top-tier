@@ -93,8 +93,8 @@
   --tier-c: oklch(66.4209% 0.016169 70.797);
   --on-accent: var(--on-action);
   --muted: var(--ink-muted);
-  --font-body: 'DM Sans Variable', 'DM Sans', system-ui, sans-serif;
-  --font-display: 'Fraunces Variable', Fraunces, Georgia, serif;
+  --font-body: 'DM Sans Variable', 'Collection Text Fallback', system-ui, sans-serif;
+  --font-display: 'Fraunces Variable', 'Collection Display Fallback', Georgia, serif;
   --radius-sm: 8px;
   --radius-md: 14px;
   --radius-lg: 24px;
