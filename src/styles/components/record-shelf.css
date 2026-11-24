@@ -12,8 +12,8 @@
   min-height: 345px;
   border-radius: var(--radius-lg, 24px);
   padding: clamp(28px, 4vw, 56px);
-  background: #352a31;
-  color: #f7eee0;
+  background: var(--hero-dark);
+  color: var(--hero-ink);
 }
 .room__copy {
   z-index: 1;
@@ -24,7 +24,7 @@
   align-items: center;
   gap: 8px;
   font-size: 0.875rem;
-  color: #efcfb4;
+  color: var(--hero-muted);
 }
 .room h1 {
   margin-block: 16px;
@@ -34,7 +34,7 @@
 }
 .room h1 em {
   display: block;
-  color: #efcfb4;
+  color: var(--hero-muted);
   font-weight: inherit;
 }
 .room__intro {
@@ -56,21 +56,21 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  border: 1px solid #d2b5a5;
+  border: 1px solid var(--hero-btn-line);
   border-radius: 9px;
   background: transparent;
-  color: #f7eee0;
+  color: var(--hero-ink);
   font: inherit;
   font-weight: 600;
   text-decoration: none;
 }
 .room__actions .room__duel {
-  background: #f3dfc9;
-  border-color: #f3dfc9;
-  color: #352a31;
+  background: var(--hero-btn);
+  border-color: var(--hero-btn);
+  color: var(--hero-btn-ink);
 }
 .room__actions :focus-visible {
-  outline-color: #f3dfc9;
+  outline-color: var(--hero-btn);
 }
 .room__art {
   width: 100%;
@@ -89,8 +89,8 @@
 }
 .room__mist i {
   inset: -25%;
-  opacity: 0.17;
-  background: radial-gradient(ellipse at 86% 52%, #bc8b8d, transparent 48%);
+  opacity: var(--mist-rose-opacity);
+  background: radial-gradient(ellipse at 86% 52%, var(--hero-mist-rose), transparent 48%);
   animation: room-drift 18s ease-in-out infinite alternate;
 }
 .room__mist i:nth-child(2) {
@@ -98,16 +98,16 @@
   transform: rotate(17deg);
 }
 .room__mist i:nth-child(3) {
-  opacity: 0.11;
+  opacity: var(--mist-copper-opacity);
   animation-delay: -13s;
-  background: radial-gradient(ellipse at 65% 80%, #e0b593, transparent 52%);
+  background: radial-gradient(ellipse at 65% 80%, var(--hero-mist-copper), transparent 52%);
 }
 .room__mist::after {
   content: '';
   position: absolute;
   inset: 0;
-  opacity: 0.15;
-  background-image: radial-gradient(circle at 65% 56%, #efcfb4 0 1px, transparent 1.6px);
+  opacity: var(--mist-dust-opacity);
+  background-image: radial-gradient(circle at 65% 56%, var(--hero-muted) 0 1px, transparent 1.6px);
   background-size: 87px 101px;
 }
 @keyframes room-drift {
