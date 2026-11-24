@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96">
+  <filter id="fiber" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency=".78" numOctaves="2" stitchTiles="stitch"/>
+    <feColorMatrix type="saturate" values="0"/>
+  </filter>
+  <path fill="#6b6358" opacity=".032" filter="url(#fiber)" d="M0 0h96v96H0z"/>
+</svg>

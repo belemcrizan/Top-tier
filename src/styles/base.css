@@ -8,7 +8,8 @@ body {
   margin: 0;
   font: 400 var(--size-body)/1.6 var(--font-body);
   color: var(--ink);
-  background: var(--bg);
+  background-color: var(--bg);
+  background-image: url('./paper-grain.svg');
   -webkit-font-smoothing: antialiased;
 }
 [data-theme] {
