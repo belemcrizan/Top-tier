@@ -15,7 +15,11 @@ function parseTheme(raw: string | null): Theme | 'system' {
 }
 
 export function useTheme(): { theme: Theme; toggle: () => void } {
-  const systemDark = useSyncExternalStore(subscribe, () => window.matchMedia(query).matches);
+  const systemDark = useSyncExternalStore(
+    subscribe,
+    () => window.matchMedia(query).matches,
+    () => false,
+  );
   const [choice, setChoice] = usePersistentState('top-tier:theme:v1', parseTheme, String);
   const theme = choice === 'system' ? (systemDark ? 'dark' : 'light') : choice;
   return { theme, toggle: () => setChoice(theme === 'dark' ? 'light' : 'dark') };

@@ -11,6 +11,7 @@ export function EraEmblem({ album, className }: EmblemProps): JSX.Element {
       alt=""
       width={360}
       height={200}
+      loading="lazy"
       decoding="async"
     />
   );

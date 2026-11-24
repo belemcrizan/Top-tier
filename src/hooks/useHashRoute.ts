@@ -20,6 +20,10 @@ function navigate(page: Page): void {
 }
 
 export function useHashRoute(): { route: Route; navigate: (page: Page) => void } {
-  const hash = useSyncExternalStore(subscribe, () => window.location.hash);
+  const hash = useSyncExternalStore(
+    subscribe,
+    () => window.location.hash,
+    () => '',
+  );
   return { route: readRoute(hash), navigate };
 }

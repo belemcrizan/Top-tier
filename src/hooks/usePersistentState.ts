@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from 'react';
+import { useEffect, useReducer, useState, useSyncExternalStore } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
 import { safeRead } from '../lib/storage';
 
@@ -7,14 +7,21 @@ function applyUpdate<T>(prev: T, action: SetStateAction<T>): T {
   return action;
 }
 
+// React uses the server snapshot during hydration, then restores browser preferences.
+const subscribeToHydration = (): (() => void) => () => {};
+const client = (): boolean => true;
+const server = (): boolean => false;
+
 export function usePersistentState<T>(
   key: string,
   parse: (raw: string | null) => T,
   serialize: (value: T) => string,
+  serverValue?: T,
 ): readonly [T, Dispatch<SetStateAction<T>>, boolean] {
   const [value, setValue] = useReducer(applyUpdate<T>, key, (storedKey) =>
     parse(safeRead(storedKey)),
   );
+  const useLocalValue = useSyncExternalStore(subscribeToHydration, client, server);
   const [available, setAvailable] = useState(true);
   useEffect(() => {
     try {
@@ -24,5 +31,5 @@ export function usePersistentState<T>(
       setAvailable(false);
     }
   }, [key, serialize, value]);
-  return [value, setValue, available];
+  return [useLocalValue ? value : (serverValue ?? parse(null)), setValue, available];
 }

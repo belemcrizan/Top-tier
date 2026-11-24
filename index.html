@@ -10,6 +10,25 @@
     />
     <link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" />
     <link rel="apple-touch-icon" href="%BASE_URL%icon-192.png" />
+    <script>
+      // Hash routes and the saved language are local to the browser.
+      const page = document.documentElement;
+      const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+      page.dataset.theme = dark ? 'dark' : 'light';
+      if (location.hash && location.hash !== '#colecao') page.dataset.clientEntry = '';
+      try {
+        const theme = localStorage.getItem('top-tier:theme:v1');
+        if (theme === 'light' || theme === 'dark') page.dataset.theme = theme;
+        if (localStorage.getItem('top-tier:language') === 'en') page.dataset.clientEntry = '';
+      } catch {
+        /* Browser storage is optional. */
+      }
+    </script>
+    <style>
+      [data-client-entry] #root {
+        visibility: hidden;
+      }
+    </style>
     <title>Top Tier · Taylor Swift</title>
   </head>
   <body>

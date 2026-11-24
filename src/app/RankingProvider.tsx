@@ -23,6 +23,7 @@ interface RankingContextValue extends RankingState {
   notify: (message: string) => void;
 }
 
+const editorialState: RankingState = { favorites: [], scores: {}, duelHistory: [] };
 const RankingContext = createContext<RankingContextValue | null>(null);
 
 export function useRanking(): RankingContextValue {
@@ -37,6 +38,7 @@ export function RankingProvider({ children }: { children: ReactNode }): JSX.Elem
     RANKING_KEY,
     restoreRanking,
     serializeRanking,
+    editorialState,
   );
   const [notice, setNotice] = useState<{ text: string; sequence: number } | null>(null);
   const dispatch = useCallback(

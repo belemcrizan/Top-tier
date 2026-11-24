@@ -82,7 +82,7 @@ export default function App(): JSX.Element {
       break;
   }
   return (
-    <div className="app" data-theme={theme} data-era={albumId}>
+    <div className="app" data-era={albumId}>
       <a
         className="skip-link"
         href="#content"

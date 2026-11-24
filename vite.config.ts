@@ -1,4 +1,5 @@
 import react from '@vitejs/plugin-react';
+import { prerenderCollection } from './scripts/prerender';
 import { defineConfig, loadEnv } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
@@ -11,8 +12,10 @@ export default defineConfig(({ mode }) => {
     build: { manifest: true },
     plugins: [
       react(),
+      prerenderCollection(base),
       VitePWA({
         registerType: 'autoUpdate',
+        injectRegister: 'script-defer',
         manifest: {
           name: 'Top Tier — Taylor Swift',
           short_name: 'Top Tier',
@@ -29,6 +32,8 @@ export default defineConfig(({ mode }) => {
           ],
         },
         workbox: {
+          skipWaiting: true,
+          clientsClaim: true,
           navigateFallback: `${base}index.html`,
           globPatterns: ['**/*.{html,css,js,svg,woff2,png,webmanifest}'],
         },

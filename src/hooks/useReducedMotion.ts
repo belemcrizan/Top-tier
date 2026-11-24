@@ -9,5 +9,9 @@ function subscribe(refresh: () => void): () => void {
 }
 
 export function useReducedMotion(): boolean {
-  return useSyncExternalStore(subscribe, () => window.matchMedia(query).matches);
+  return useSyncExternalStore(
+    subscribe,
+    () => window.matchMedia(query).matches,
+    () => false,
+  );
 }
