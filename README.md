@@ -149,9 +149,9 @@ that origin. Export score JSON to move between browsers or domains.
 
 The build renders the collection to HTML with its styles and hero image. React hydrates that
 initial view and restores local preferences. Pure ranking functions keep each position stable
-when the visible tracks change. Hash routes work on a static host. The production service worker caches the
-app for offline use after its first successful load. The language selector switches the interface
-and editorial commentary between Portuguese and English.
+when the visible tracks change. Hash routes work on a static host. The production service worker
+caches the app for offline use after its first successful load. The language selector switches
+the interface and editorial commentary between Portuguese and English.
 
 **Autor / Author** · Crizan Belem Ribeiro. Projeto independente de fã, sem afiliação. Independent,
 unaffiliated fan project. A licença MIT abrange o código. The MIT license covers the code.
