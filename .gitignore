@@ -6,4 +6,9 @@ dist/
 .DS_Store
 coverage/
 *.tsbuildinfo
-.openai/*.local.json
+.openai/
+
+.lighthouseci/
+lighthouse-report/
+playwright-report/
+test-results/

@@ -1,0 +1,9 @@
+node_modules/
+dist/
+coverage/
+.lighthouseci/
+lighthouse-report/
+playwright-report/
+test-results/
+.husky/_/
+package-lock.json
