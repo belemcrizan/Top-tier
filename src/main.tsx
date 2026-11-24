@@ -1,3 +1,5 @@
+import { registerWorker } from './boot/registerWorker';
+import { loadCollectionFonts } from './styles/loadFonts';
 import { createRoot, hydrateRoot } from 'react-dom/client';
 import { Application } from './app/Application';
 import './styles/index.css';
@@ -12,3 +14,6 @@ if (root.hasChildNodes() && !document.documentElement.hasAttribute('data-client-
   document.documentElement.removeAttribute('data-client-entry');
   createRoot(root).render(<Application />);
 }
+
+registerWorker();
+loadCollectionFonts();

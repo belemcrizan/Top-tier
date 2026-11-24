@@ -16,9 +16,7 @@ for (const [key, entry] of Object.entries(manifest)) {
 }
 
 const files = [...seen].map((key) => manifest[key].file).filter((file) => file.endsWith('.js'));
-// Include the small registration script injected by the PWA plugin in the entry HTML.
 const html = await readFile(new URL('index.html', directory), 'utf8');
-if (html.includes('registerSW.js')) files.push('registerSW.js');
 const sizes = await Promise.all(
   files.map(async (file) => {
     const bytes = await readFile(new URL(file, directory));
@@ -31,7 +29,7 @@ const inlineScripts = [...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)
   .filter(Boolean);
 const inlineSize = inlineScripts.reduce((bytes, code) => bytes + gzipSync(code).length, 0);
 const sum = sizes.reduce((total, size) => total + size, inlineSize);
-console.log(
-  `Initial JavaScript: ${(sum / 1000).toFixed(1)} kB gzip (${files.length} files, ${inlineScripts.length} inline)`,
-);
+const sizeLabel = `${(sum / 1000).toFixed(1)} kB gzip`;
+const sources = `${files.length} external, ${inlineScripts.length} inline`;
+console.log(`Initial JavaScript: ${sizeLabel} (${sources})`);
 if (!files.length || sum >= 120_000) process.exitCode = 1;

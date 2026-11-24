@@ -15,7 +15,7 @@ export default defineConfig(({ mode }) => {
       prerenderCollection(base),
       VitePWA({
         registerType: 'autoUpdate',
-        injectRegister: 'script-defer',
+        injectRegister: null,
         manifest: {
           name: 'Top Tier — Taylor Swift',
           short_name: 'Top Tier',
