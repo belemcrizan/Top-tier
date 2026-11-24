@@ -311,6 +311,7 @@
   padding-right: 1.75rem;
 }
 .song-detail__identity img {
+  height: auto;
   width: clamp(3rem, 14vw, 6.5rem);
   border-radius: var(--radius-sm);
 }
