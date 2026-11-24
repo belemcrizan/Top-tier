@@ -30,7 +30,7 @@ it('moves to the next measured lane and restores keyboard focus to the relocated
       </RankingProvider>
     </I18nProvider>,
   );
-  const chip = screen.getByRole('button', { name: 'Mover · champagne problems · S+', exact: true });
+  const chip = screen.getByRole('button', { name: 'Mover · champagne problems · S+' });
   chip.focus();
   press(chip, 'Space');
   await waitFor(() => expect(chip).toHaveAttribute('aria-pressed', 'true'));
@@ -46,7 +46,6 @@ it('moves to the next measured lane and restores keyboard focus to the relocated
   press(document, 'Space');
   const relocated = await screen.findByRole('button', {
     name: 'Mover · champagne problems · S',
-    exact: true,
   });
   await waitFor(() => expect(relocated).toHaveFocus());
 });
