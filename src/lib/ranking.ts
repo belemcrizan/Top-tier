@@ -1,5 +1,5 @@
-import { songs, tierForScore } from '../data/rankings';
-import type { AlbumId, Song, Tier } from '../data/rankings';
+import { albums, songs, tierForScore } from '../data/rankings';
+import type { Album, AlbumId, Song, Tier } from '../data/rankings';
 
 /** User scores override the editorial score; omitted songs keep their original score. */
 export type PersonalScores = Record<string, number>;
@@ -26,17 +26,25 @@ const validScore = (score: unknown): score is number =>
   typeof score === 'number' && Number.isInteger(score) && score >= 0 && score <= 100;
 
 const normalize = (value: string) =>
-  value.replace(/[’‘]/g, "'").normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('pt-BR').trim();
+  value
+    .replace(/[’‘]/g, "'")
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLocaleLowerCase('pt-BR')
+    .trim();
 
 /** Recompute every position before applying filters so ranks never depend on the visible subset. */
-export function personalizeSongs(base: Song[], scores: PersonalScores): Song[] {
+export function personalizeSongs(base: readonly Song[], scores: PersonalScores): Song[] {
   const result = base
     .map((song) => {
       const score = scores[song.id];
       const pontuacao = validScore(score) ? score : song.pontuacao;
       return { ...song, pontuacao, tier: tierForScore(pontuacao) };
     })
-    .sort((a, b) => b.pontuacao - a.pontuacao || a.posicaoGeral - b.posicaoGeral || a.id.localeCompare(b.id));
+    .sort(
+      (a, b) =>
+        b.pontuacao - a.pontuacao || a.posicaoGeral - b.posicaoGeral || a.id.localeCompare(b.id),
+    );
 
   const albumPositions = new Map<AlbumId, number>();
   return result.map((song, index) => {
@@ -47,15 +55,25 @@ export function personalizeSongs(base: Song[], scores: PersonalScores): Song[] {
 }
 
 /** Intersect all filters, then sort a fresh array without mutating source data. */
-export function filterSongs(base: Song[], filters: RankingFilters, favorites: string[]): Song[] {
+export function filterSongs(
+  base: readonly Song[],
+  filters: RankingFilters,
+  favorites: readonly string[],
+  albumCatalog: readonly Pick<Album, 'id' | 'ordemReferencia'>[] = albums,
+): Song[] {
+  const order = new Map(albumCatalog.map(({ id, ordemReferencia }) => [id, ordemReferencia]));
+  function compareAlbums(a: Song, b: Song): number {
+    return (order.get(a.album) ?? Infinity) - (order.get(b.album) ?? Infinity);
+  }
   const query = normalize(filters.search);
   const favoriteSet = new Set(favorites);
-  const result = base.filter((song) =>
-    (filters.album === 'all' || song.album === filters.album) &&
-    (filters.tier === 'all' || song.tier === filters.tier) &&
-    song.pontuacao >= filters.minScore &&
-    (!query || normalize(song.titulo).includes(query)) &&
-    (!filters.favoritesOnly || favoriteSet.has(song.id)),
+  const result = base.filter(
+    (song) =>
+      (filters.album === 'all' || song.album === filters.album) &&
+      (filters.tier === 'all' || song.tier === filters.tier) &&
+      song.pontuacao >= filters.minScore &&
+      (!query || normalize(song.titulo).includes(query)) &&
+      (!filters.favoritesOnly || favoriteSet.has(song.id)),
   );
 
   return result.sort((a, b) => {
@@ -63,9 +81,11 @@ export function filterSongs(base: Song[], filters: RankingFilters, favorites: st
       case 'score':
         return b.pontuacao - a.pontuacao || a.posicaoGeral - b.posicaoGeral;
       case 'album':
-        return a.album.localeCompare(b.album, 'pt-BR') || a.posicaoNoAlbum - b.posicaoNoAlbum;
+        return compareAlbums(a, b) || a.posicaoNoAlbum - b.posicaoNoAlbum;
       case 'track':
-        return a.numeroFaixa - b.numeroFaixa || a.posicaoGeral - b.posicaoGeral;
+        return (
+          compareAlbums(a, b) || a.numeroFaixa - b.numeroFaixa || a.posicaoGeral - b.posicaoGeral
+        );
       default:
         return a.posicaoGeral - b.posicaoGeral;
     }

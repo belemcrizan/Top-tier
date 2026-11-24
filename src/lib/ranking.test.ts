@@ -1,98 +1,148 @@
-import assert from 'node:assert/strict';
-import test from 'node:test';
-import { songs, tierForScore } from '../data/rankings';
-import type { AlbumId } from '../data/rankings';
-import { defaultFilters, filterSongs, parseFavorites, parseScores, personalizeSongs } from './ranking';
+import { expect, it } from 'vitest';
+import { albums, songs, TIER_SCALE, tierForScore, tierLabels } from '../data/rankings';
+import type { Song } from '../data/rankings';
+import { albumText, songText } from '../data/translations';
+import {
+  defaultFilters,
+  filterSongs,
+  parseFavorites,
+  parseScores,
+  personalizeSongs,
+} from './ranking';
 
-const range = (length: number) => Array.from({ length }, (_, index) => index + 1);
+const range = (length: number): number[] => Array.from({ length }, (_, index) => index + 1);
+const ids = (rows: Song[]): string[] => rows.map((song) => song.id);
 
-test('the collection contains every deluxe track with unique IDs and continuous positions', () => {
-  assert.equal(songs.length, 49);
-  assert.equal(new Set(songs.map((song) => song.id)).size, 49);
-  assert.deepEqual(songs.map((song) => song.posicaoGeral).sort((a, b) => a - b), range(49));
-  const counts: Record<AlbumId, number> = { evermore: 17, folklore: 17, reputation: 15 };
-  for (const [album, count] of Object.entries(counts)) {
-    const subset = songs.filter((song) => song.album === album);
-    assert.equal(subset.length, count);
-    assert.deepEqual(subset.map((song) => song.numeroFaixa).sort((a, b) => a - b), range(count));
-    assert.deepEqual(subset.map((song) => song.posicaoNoAlbum).sort((a, b) => a - b), range(count));
+it('preserves the catalog, stable IDs, editorial scores and continuous positions', () => {
+  expect(songs).toHaveLength(49);
+  expect(new Set(ids(songs)).size).toBe(49);
+  expect(songs.map((song) => song.posicaoGeral)).toEqual(range(49));
+  const counts = { evermore: 17, folklore: 17, reputation: 15 };
+  for (const { id } of albums) {
+    const album = songs.filter((song) => song.album === id);
+    expect(album).toHaveLength(counts[id]);
+    expect(album.map((song) => song.numeroFaixa).sort((a, b) => a - b)).toEqual(range(counts[id]));
+    expect(album.map((song) => song.posicaoNoAlbum)).toEqual(range(counts[id]));
+    for (const song of album) {
+      expect(song.id).toBe(`${id}-${String(song.numeroFaixa).padStart(2, '0')}`);
+      expect(song.tier).toBe(tierForScore(song.pontuacao));
+      expect(song.justificativa.length).toBeGreaterThan(50);
+      expect(song.contexto.length).toBeGreaterThan(20);
+    }
   }
+});
+
+it('provides both sets of editorial notes for every track and album', () => {
   for (const song of songs) {
-    assert.equal(song.tier, tierForScore(song.pontuacao));
-    assert.ok(song.justificativa.length > 50);
-    assert.ok(song.contexto.length > 20);
+    expect(songText(song, 'en').contexto).not.toBe(songText(song, 'pt-BR').contexto);
+    expect(songText(song, 'en').justificativa).not.toBe(songText(song, 'pt-BR').justificativa);
+  }
+  for (const album of albums) {
+    expect(albumText(album, 'en').descricao).not.toBe(albumText(album, 'pt-BR').descricao);
   }
 });
 
-test('personal scores recalculate global and album ranks, preserving source objects', () => {
-  const before = JSON.stringify(songs);
-  const target = songs.find((song) => song.posicaoGeral === 49)!;
-  const originalTop = songs.find((song) => song.posicaoGeral === 1)!;
-  const result = personalizeSongs(songs, { [target.id]: 100, [originalTop.id]: 0 });
-  assert.equal(result[0].id, target.id);
-  assert.equal(result[0].tier, 'S+');
-  assert.equal(result[0].posicaoNoAlbum, 1);
-  assert.equal(result.at(-1)?.id, originalTop.id);
-  assert.equal(result.at(-1)?.tier, 'C');
-  assert.deepEqual(result.map((song) => song.posicaoGeral), range(49));
-  const album = result.filter((song) => song.album === target.album);
-  assert.deepEqual(album.map((song) => song.posicaoNoAlbum), range(album.length));
-  assert.equal(JSON.stringify(songs), before);
+it('B4: the same ranges classify and label every score without overlaps or gaps', () => {
+  for (let score = 0; score <= 100; score += 1) {
+    const matches = TIER_SCALE.filter(({ min, max }) => min <= score && score <= max);
+    expect(matches).toHaveLength(1);
+    expect(tierForScore(score)).toBe(matches[0].tier);
+    expect(tierLabels[tierForScore(score)]).toBe(matches[0].label);
+  }
 });
 
-test('equal scores use the original global rank as their stable tie breaker', () => {
+it('personal scores recalculate global and album ranks without modifying editorial scores', () => {
+  const before = JSON.stringify(songs);
+  const originalTop = songs[0];
+  const target = songs[songs.length - 1];
+  const result = personalizeSongs(songs, { [target.id]: 100, [originalTop.id]: 0 });
+  expect(result[0]).toMatchObject({ id: target.id, tier: 'S+', posicaoNoAlbum: 1 });
+  expect(result.at(-1)).toMatchObject({ id: originalTop.id, tier: 'C' });
+  expect(result.map((song) => song.posicaoGeral)).toEqual(range(49));
+  const album = result.filter((song) => song.album === target.album);
+  expect(album.map((song) => song.posicaoNoAlbum)).toEqual(range(album.length));
+  expect(JSON.stringify(songs)).toBe(before);
+});
+
+it('breaks score ties by the original global rank even for a reversed input', () => {
   const tied = Object.fromEntries(songs.map((song) => [song.id, 90]));
   const result = personalizeSongs([...songs].reverse(), tied);
-  assert.deepEqual(result.map((song) => song.id), [...songs].sort((a, b) => a.posicaoGeral - b.posicaoGeral).map((song) => song.id));
-  assert.ok(result.every((song) => song.tier === 'A'));
+  expect(ids(result)).toEqual(ids(songs));
+  expect(result.every((song) => song.tier === 'A')).toBe(true);
 });
 
-test('album, tier, score, query and favorites filters combine as an intersection', () => {
+it('intersects album, tier, minimum score, title and favorite constraints', () => {
   const target = songs[0];
-  const result = filterSongs(songs, {
+  const filters = {
     ...defaultFilters,
     album: target.album,
     tier: target.tier,
     minScore: target.pontuacao,
     search: `  ${target.titulo.toUpperCase()}  `,
     favoritesOnly: true,
-  }, [target.id]);
-  assert.deepEqual(result.map((song) => song.id), [target.id]);
-  assert.equal(filterSongs(songs, { ...defaultFilters, favoritesOnly: true }, []).length, 0);
-  assert.equal(filterSongs(songs, { ...defaultFilters, search: 'a song that is not here' }, []).length, 0);
+  };
+  expect(ids(filterSongs(songs, filters, [target.id]))).toEqual([target.id]);
+  expect(filterSongs(songs, filters, [])).toHaveLength(0);
+  expect(filterSongs(songs, { ...defaultFilters, search: 'a song that is not here' }, [])).toEqual(
+    [],
+  );
 });
 
-test('search ignores accents and filters do not renumber positions or mutate the data', () => {
+it('normalizes accents and apostrophes and preserves original positions in a filtered view', () => {
   const custom = { ...songs[0], titulo: 'Águas de Agosto' };
-  assert.equal(filterSongs([custom], { ...defaultFilters, search: 'AGUAS' }, []).length, 1);
-  const before = songs.map((song) => song.id);
+  expect(filterSongs([custom], { ...defaultFilters, search: 'AGUAS' }, [])).toHaveLength(1);
+  expect(filterSongs(songs, { ...defaultFilters, search: "'tis the damn" }, [])).toHaveLength(1);
+  const before = ids(songs);
   const subset = filterSongs(songs, { ...defaultFilters, album: 'reputation', sort: 'track' }, []);
-  assert.deepEqual(subset.map((song) => song.numeroFaixa), range(15));
-  assert.deepEqual(songs.map((song) => song.id), before);
-  assert.ok(subset.every((song) => song.posicaoGeral === songs.find((item) => item.id === song.id)?.posicaoGeral));
+  expect(subset.map((song) => song.numeroFaixa)).toEqual(range(15));
+  expect(ids(songs)).toEqual(before);
+  for (const song of subset) expect(songs[song.posicaoGeral - 1].id).toBe(song.id);
 });
 
-test('all sorting modes have deterministic ordering', () => {
+it('orders positions and scores deterministically', () => {
   const reversed = [...songs].reverse();
-  const ranked = filterSongs(reversed, defaultFilters, []);
-  assert.deepEqual(ranked.map((song) => song.posicaoGeral), range(49));
-  const scored = filterSongs(reversed, { ...defaultFilters, sort: 'score' }, []);
-  assert.ok(scored.every((song, i) => i === 0 || scored[i - 1].pontuacao >= song.pontuacao));
-  const album = filterSongs(reversed, { ...defaultFilters, sort: 'album' }, []);
-  assert.deepEqual([...new Set(album.map((song) => song.album))], ['evermore', 'folklore', 'reputation']);
-  for (let i = 1; i < album.length; i += 1) {
-    if (album[i].album === album[i - 1].album) assert.ok(album[i].posicaoNoAlbum > album[i - 1].posicaoNoAlbum);
+  expect(ids(filterSongs(reversed, defaultFilters, []))).toEqual(ids(songs));
+  expect(ids(filterSongs(reversed, { ...defaultFilters, sort: 'score' }, []))).toEqual(ids(songs));
+});
+
+it('B1: sorts albums by editable collection order, followed by rank in the album', () => {
+  const catalog = albums.map((album) => ({ ...album, ordemReferencia: -album.ordemReferencia }));
+  const album = filterSongs(songs, { ...defaultFilters, sort: 'album' }, [], catalog);
+  expect([...new Set(album.map((song) => song.album))]).toEqual([
+    'reputation',
+    'folklore',
+    'evermore',
+  ]);
+  for (const { id } of catalog) {
+    const items = album.filter((song) => song.album === id);
+    expect(items.map((song) => song.posicaoNoAlbum)).toEqual(range(items.length));
   }
 });
 
-test('score and favorite parsing rejects corrupt, stale and out-of-range browser storage', () => {
-  const first = songs[0].id;
-  const second = songs[1].id;
-  for (const raw of [null, '', '{bad', 'null', '[]', '42', '"text"']) assert.deepEqual(parseScores(raw), {});
-  assert.deepEqual(parseScores(JSON.stringify({ [first]: 0, [second]: 100, stale: 80 })), { [first]: 0, [second]: 100 });
+it('B2: finishes every track of an album before proceeding to the next album', () => {
+  const order = filterSongs([...songs].reverse(), { ...defaultFilters, sort: 'track' }, []);
+  const expected = [...albums]
+    .sort((a, b) => a.ordemReferencia - b.ordemReferencia)
+    .flatMap(({ id }) =>
+      songs.filter((song) => song.album === id).sort((a, b) => a.numeroFaixa - b.numeroFaixa),
+    );
+  expect(ids(order)).toEqual(ids(expected));
+});
+
+it('rejects corrupt, stale and out-of-range browser storage', () => {
+  const [first, second] = ids(songs);
+  for (const raw of [null, '', '{bad', 'null', '[]', '42', '"text"'])
+    expect(parseScores(raw)).toEqual({});
+  expect(parseScores(JSON.stringify({ [first]: 0, [second]: 100, stale: 80 }))).toEqual({
+    [first]: 0,
+    [second]: 100,
+  });
   for (const invalid of [-1, 101, 5.5, '90', null, false]) {
-    assert.deepEqual(parseScores(JSON.stringify({ [first]: invalid })), {});
+    expect(parseScores(JSON.stringify({ [first]: invalid }))).toEqual({});
   }
-  for (const raw of [null, '', '{bad', 'null', '{}', '42']) assert.deepEqual(parseFavorites(raw), []);
-  assert.deepEqual(parseFavorites(JSON.stringify([first, first, 'stale', 9, second])), [first, second]);
+  for (const raw of [null, '', '{bad', 'null', '{}', '42']) expect(parseFavorites(raw)).toEqual([]);
+  expect(parseFavorites(JSON.stringify([first, first, 'stale', 9, second]))).toEqual([
+    first,
+    second,
+  ]);
 });
