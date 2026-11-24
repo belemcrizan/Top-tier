@@ -14,11 +14,12 @@ describe('collection', () => {
       </I18nProvider>
     );
     const result = render(fixture(3, 9));
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/três eras/i);
-    expect(screen.getByText(/nove faixas/)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
+      'Cada era, uma forma de sentir.',
+    );
+    expect(screen.getByText(/três eras, nove faixas/i)).toBeInTheDocument();
     result.rerender(fixture(4, 10));
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/quatro eras/i);
-    expect(screen.getByText(/dez faixas/)).toBeInTheDocument();
+    expect(screen.getByText(/quatro eras, dez faixas/i)).toBeInTheDocument();
   });
 
   it('exposes both tier counts and the changed score in expanded insights', async () => {
