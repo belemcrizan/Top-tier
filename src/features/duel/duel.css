@@ -1,0 +1,165 @@
+.duel {
+  max-width: 59rem;
+  margin: auto;
+  padding: clamp(1.5rem, 5vw, 4rem) 1rem;
+}
+.duel__header h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 6vw, 4.5rem);
+  font-weight: 500;
+  line-height: 1.05;
+  margin: 0;
+}
+.duel__header p {
+  color: var(--ink-muted);
+  margin: 0.75rem 0 1.75rem;
+}
+.duel__pair {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 4vw, 2.5rem);
+}
+.duel__choice {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  text-align: start;
+  border: 1px solid var(--ui-line);
+  border-radius: var(--radius-lg, 24px);
+  padding: 0;
+  overflow: hidden;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  transition: transform 160ms ease-out;
+}
+.duel__choice:hover {
+  transform: translateY(-3px);
+}
+.duel__art {
+  display: grid;
+  overflow: hidden;
+  height: clamp(9rem, 22vw, 15rem);
+}
+.duel__art img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+.duel__label {
+  display: grid;
+  gap: 0.45rem;
+  padding: clamp(0.75rem, 2vw, 1.5rem);
+}
+.duel__label small {
+  font-size: 0.875rem;
+  color: var(--ink-muted);
+}
+.duel__label strong {
+  font: 500 clamp(1.05rem, 3vw, 1.875rem) / 1.17 var(--font-display);
+  overflow-wrap: anywhere;
+}
+.duel__choice kbd {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+}
+.duel kbd,
+.duel__or {
+  display: inline-grid;
+  place-items: center;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--ui-line);
+  border-radius: var(--radius-sm, 8px);
+  background: var(--surface-2);
+  color: var(--ink);
+}
+.duel__or {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 100%;
+  width: 2.25rem;
+  height: 2.25rem;
+  font-style: italic;
+}
+.duel__actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+.duel__actions button,
+.duel__actions label,
+.duel__actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0 1rem;
+  min-height: 44px;
+  border-radius: var(--radius-sm, 8px);
+}
+.duel__actions button {
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--ui-line);
+}
+.duel__actions label {
+  margin-left: auto;
+  color: var(--ink-muted);
+}
+.duel__actions .duel__apply {
+  background: var(--action);
+  color: var(--on-accent);
+}
+.duel__actions .duel__apply:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+.duel__progress {
+  display: grid;
+  gap: 0.5rem;
+  padding: 1.25rem;
+  margin-top: 1.5rem;
+  background: var(--surface-2);
+  border-radius: var(--radius-md, 14px);
+}
+.duel__progress label {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.duel__progress progress {
+  width: 100%;
+  height: 12px;
+  accent-color: var(--action);
+}
+.duel__progress p {
+  color: var(--ink-muted);
+  font-size: 0.875rem;
+  margin: 0;
+}
+@media (max-width: 540px) {
+  .duel__actions label {
+    margin-left: 0;
+    padding-inline: 0;
+  }
+  .duel__or {
+    width: 1.8rem;
+    height: 1.8rem;
+    font-size: 0.75rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .duel__choice {
+    transition: none;
+  }
+  .duel__choice:hover {
+    transform: none;
+  }
+}

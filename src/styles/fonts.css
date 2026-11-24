@@ -1,0 +1,51 @@
+/* Local subsets retain the weight and SOFT axes used by the headings. Optional display keeps
+   a cold mobile visit readable without a late font swap. */
+@font-face {
+  font-family: 'DM Sans Variable';
+  font-style: normal;
+  font-weight: 100 1000;
+  font-display: optional;
+  src: url('@fontsource-variable/dm-sans/files/dm-sans-latin-wght-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Fraunces Variable';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: optional;
+  src: url('@fontsource-variable/fraunces/files/fraunces-latin-soft-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Fraunces Variable';
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: optional;
+  src: url('@fontsource-variable/fraunces/files/fraunces-latin-soft-italic.woff2') format('woff2');
+}
+
+/* Match the average width of the bilingual hero copy and the web fonts' vertical metrics;
+   Arial and Times New Roman share their advance widths with the Liberation families. */
+@font-face {
+  font-family: 'Collection Text Fallback';
+  src: local('Arial'), local('Liberation Sans');
+  size-adjust: 105.07%;
+  ascent-override: 94.41%;
+  descent-override: 29.5%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Collection Display Fallback';
+  src: local('Times New Roman'), local('Liberation Serif');
+  size-adjust: 117.15%;
+  ascent-override: 83.48%;
+  descent-override: 21.77%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Collection Display Fallback';
+  font-style: italic;
+  src: local('Times New Roman Italic'), local('Liberation Serif Italic');
+  size-adjust: 112.56%;
+  ascent-override: 86.89%;
+  descent-override: 22.66%;
+  line-gap-override: 0%;
+}

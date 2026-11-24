@@ -1,14 +1,70 @@
 {
-  "name": "top-tier-swift",
-  "version": "1.0.0",
+  "name": "top-tier",
+  "version": "2.0.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc -b && vite build",
     "preview": "vite preview --host 0.0.0.0",
-    "test": "node --import tsx --test src/lib/ranking.test.ts"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "lint": "eslint . --max-warnings 0",
+    "format": "prettier . --write",
+    "typecheck": "tsc --noEmit",
+    "check-contrast": "node --import tsx scripts/check-contrast.ts",
+    "check:size": "node scripts/check-size.mjs",
+    "lighthouse": "lhci autorun",
+    "prepare": "husky"
   },
-  "dependencies": { "react": "^19.2.0", "react-dom": "^19.2.0", "lucide-react": "^0.468.0" },
-  "devDependencies": { "@types/react": "^19.2.0", "@types/react-dom": "^19.2.0", "@vitejs/plugin-react": "^5.1.0", "typescript": "~5.9.3", "vite": "^7.2.0", "tsx": "^4.20.0", "@types/node": "^24.10.0" }
+  "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@fontsource-variable/dm-sans": "^5.2.0",
+    "@fontsource-variable/fraunces": "^5.2.0",
+    "lucide-react": "^0.468.0",
+    "lz-string": "^1.5.0",
+    "n2words": "1.24.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.0",
+    "@lhci/cli": "^0.15.1",
+    "@playwright/test": "^1.56.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^24.10.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^5.1.0",
+    "@vitest/coverage-v8": "^4.0.0",
+    "axe-core": "^4.11.0",
+    "eslint": "^9.39.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "globals": "^16.5.0",
+    "husky": "^9.1.7",
+    "jsdom": "^26.1.0",
+    "lint-staged": "^16.2.0",
+    "prettier": "^3.6.0",
+    "tsx": "^4.20.0",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.46.0",
+    "vite": "^7.2.0",
+    "vite-plugin-pwa": "^1.1.0",
+    "vitest": "^4.0.0"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,mjs,cjs}": [
+      "eslint --fix --max-warnings 0",
+      "prettier --write"
+    ],
+    "*.{css,json,yml,yaml,md,html}": "prettier --write"
+  }
 }

@@ -1,0 +1,216 @@
+.masthead {
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+.masthead__inner {
+  width: min(92%, 80rem);
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 2vw, 2rem);
+}
+.masthead__brand {
+  display: inline-flex;
+  min-height: 68px;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  font-weight: 650;
+  text-decoration: none;
+  letter-spacing: -0.06em;
+}
+.masthead__nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.25rem, 1vw, 1rem);
+  flex: 1;
+}
+.masthead__nav a {
+  display: inline-flex;
+  min-height: 52px;
+  padding: 0 0.45rem;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-muted);
+  font-size: 0.875rem;
+  text-decoration: none;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+}
+.masthead__nav a[aria-current='page'] {
+  color: var(--ink);
+  border-color: var(--action);
+  font-weight: 650;
+}
+.masthead__tools {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+}
+.masthead__tools :is(button, select),
+.toast button,
+.guide button {
+  display: inline-flex;
+  min-width: 44px;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+}
+.masthead__tools :is(button, select):hover,
+.guide button:hover,
+.toast button:hover {
+  background: var(--surface-2);
+}
+.skip-link {
+  position: fixed;
+  z-index: 20;
+  top: 8px;
+  left: 8px;
+  padding: 12px 20px;
+  transform: translateY(-160%);
+  background: var(--surface);
+  color: var(--ink);
+}
+.skip-link:focus {
+  transform: none;
+}
+.page-heading,
+.colophon,
+.guide {
+  width: min(92%, 76rem);
+  margin-inline: auto;
+}
+.page-heading {
+  padding-block: clamp(2rem, 6vw, 5rem) 1rem;
+}
+.page-heading h1 {
+  margin: 0 0 0.5rem;
+}
+.page-heading p,
+.guide p,
+.colophon {
+  color: var(--ink-muted);
+}
+.guide {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin-block: 24px;
+  background: var(--surface);
+}
+.guide__copy {
+  flex: 1;
+  display: grid;
+  gap: 3px;
+}
+.guide__copy span {
+  font-size: 0.8125rem;
+  color: var(--ink-muted);
+}
+.guide__copy p {
+  margin: 0;
+  font-size: 0.9375rem;
+}
+.guide .guide__next {
+  padding-inline: 12px;
+  border-color: var(--ink-muted);
+}
+.colophon {
+  margin-block: 48px 0;
+  border-top: 1px solid var(--line);
+  padding-block: 12px 24px;
+}
+.colophon summary {
+  padding-block: 12px;
+  min-height: 44px;
+  cursor: pointer;
+}
+.colophon li,
+.colophon p {
+  max-width: 66ch;
+}
+.colophon li a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+.colophon h2 {
+  margin-block: 16px 8px;
+  font-size: 1.2rem;
+}
+.colophon__credit {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: center;
+}
+.colophon__credit a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+}
+.colophon__credit span {
+  font-size: 0.875rem;
+}
+.toast {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 12;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: max-content;
+  max-width: calc(100vw - 24px);
+  padding: 8px 8px 8px 16px;
+  background: var(--surface);
+  border: 1px solid var(--ink-muted);
+  color: var(--ink);
+  border-radius: 14px;
+  box-shadow: 0 8px 26px #42352424;
+}
+@media (max-width: 1100px) {
+  .masthead__inner {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0;
+  }
+  .masthead__brand {
+    min-height: 52px;
+  }
+  .masthead__tools {
+    grid-area: 1 / 2;
+  }
+  .masthead__nav {
+    grid-column: 1 / -1;
+    overflow-x: auto;
+    justify-content: start;
+    padding: 2px;
+  }
+  .masthead__nav a {
+    min-height: 44px;
+    padding-inline: 10px;
+  }
+}
+@media (max-width: 600px) {
+  .guide {
+    flex-wrap: wrap;
+    align-items: start;
+  }
+  .guide__copy {
+    flex-basis: 70%;
+  }
+}
