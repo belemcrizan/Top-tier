@@ -3,7 +3,7 @@ import { Heart } from 'lucide-react';
 import type { Song } from '../../data/rankings';
 import { songText } from '../../data/translations';
 import { useI18n } from '../../i18n';
-import { EraEmblem } from '../collection/EraEmblem';
+import { AlbumCover } from '../collection/AlbumCover';
 import { TierMark } from './TierMark';
 
 export interface RowActions {
@@ -33,7 +33,12 @@ export function SongRow({
     : `${song.album} · ${t('rankTrack')} ${song.numeroFaixa}`;
   const animation: CSSProperties = { viewTransitionName: `rank-${song.id}` };
   return (
-    <li className="song-row" data-song-id={song.id} style={animation}>
+    <li
+      className="song-row"
+      data-song-id={song.id}
+      data-leading={position <= 3 || undefined}
+      style={animation}
+    >
       <span className="song-row__position">{String(position).padStart(2, '0')}</span>
       <button
         type="button"
@@ -41,7 +46,7 @@ export function SongRow({
         onClick={() => open(song.id)}
         aria-label={`${t('rankDetails')} ${song.titulo}`}
       >
-        {!albumView && <EraEmblem album={song.album} />}
+        <AlbumCover album={song.album} size="thumb" className="song-row__cover" />
         <span className="song-row__copy">
           <strong>{song.titulo}</strong>
           <span>{description}</span>

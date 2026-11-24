@@ -4,6 +4,7 @@ import type { JSX } from 'react';
 import { expect, it, vi } from 'vitest';
 import { RankingProvider, useRanking } from '../../app/RankingProvider';
 import { songs } from '../../data/rankings';
+import { covers } from '../../visual/media';
 import { I18nProvider } from '../../i18n';
 import RankingView from './RankingView';
 import type { RankingMode } from './RankingView';
@@ -96,4 +97,18 @@ it('opens an encoded YouTube Music search, including punctuation and album', asy
   expect(within(dialog).queryByRole('button', { name: /favoritos/i })).not.toBeInTheDocument();
   const result = await axe.run(dialog, { rules: { 'color-contrast': { enabled: false } } });
   expect(result.violations).toEqual([]);
+});
+
+it('uses the matching album cover in album rows and in the song booklet', () => {
+  mount('album');
+  const song = songs.find(({ album }) => album === 'reputation');
+  if (!song) throw new Error('Missing reputation fixture');
+  const trigger = screen.getByRole('button', { name: `Detalhes de ${song.titulo}` });
+  const thumbnail = within(trigger).getByAltText('');
+  expect(thumbnail).toHaveAttribute('src', covers[song.album].thumb);
+  expect(thumbnail).toHaveAttribute('loading', 'lazy');
+  fireEvent.click(trigger);
+  const cover = within(screen.getByRole('dialog')).getByAltText('');
+  expect(cover).toHaveAttribute('src', covers[song.album].card);
+  expect(cover).toHaveAttribute('loading', 'eager');
 });
