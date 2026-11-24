@@ -2,6 +2,7 @@ import { useDraggable, useDroppable } from '@dnd-kit/core';
 import type { ReactElement } from 'react';
 import type { Song, Tier } from '../../data/rankings';
 import { useI18n } from '../../i18n';
+import { TrackArtwork } from './TrackArtwork';
 
 function TrackChip({ song }: { song: Song }): ReactElement {
   const { t } = useI18n();
@@ -20,10 +21,7 @@ function TrackChip({ song }: { song: Song }): ReactElement {
       {...listeners}
       aria-label={[t('boardGrab'), song.titulo, song.tier].join(' · ')}
     >
-      <span aria-hidden="true" className="tier-board__grip">
-        ⠿
-      </span>
-      <span>{song.titulo}</span>
+      <TrackArtwork song={song} />
     </button>
   );
 }

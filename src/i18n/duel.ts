@@ -1,5 +1,8 @@
 export const duelPt = {
   duelTitle: 'Qual fica com você?',
+  duelPicked: 'Você escolheu',
+  duelTied: 'Empate registrado.',
+  duelSkipped: 'Duelo pulado.',
   duelIntro: 'Escolha a música que você voltaria a ouvir agora.',
   duelChoose: 'Escolher',
   duelLeft: 'Escolha à esquerda',
@@ -36,6 +39,9 @@ export const duelPt = {
 
 export const duelEn: Record<keyof typeof duelPt, string> = {
   duelTitle: 'Which song stays with you?',
+  duelPicked: 'You picked',
+  duelTied: 'Tie recorded.',
+  duelSkipped: 'Duel skipped.',
   duelIntro: 'Choose the song you would play again right now.',
   duelChoose: 'Choose',
   duelLeft: 'Left choice',

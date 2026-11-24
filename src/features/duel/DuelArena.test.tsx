@@ -31,12 +31,14 @@ describe('DuelArena', () => {
   it('records a choice, advances the pair and applies the scores', () => {
     const first = renderArena();
     const picks = screen.getAllByRole('button', { name: /^Escolher / });
+    const winnerName = picks[0].getAttribute('aria-label')?.slice('Escolher '.length);
     const loserName = picks[1].getAttribute('aria-label')?.slice('Escolher '.length);
     const loser = songs.find(({ titulo }) => titulo === loserName);
     if (!loser) throw Error('Missing opponent');
     first.unmount();
     renderArena(loser);
     fireEvent.keyDown(window, { key: 'ArrowLeft' });
+    expect(screen.getByText('Você escolheu ' + winnerName + '.')).toBeVisible();
     expect(screen.queryByRole('button', { name: 'Escolher ' + loserName })).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'Aplicar ao Meu ranking' }));
     expect(Number(screen.getByRole('status', { name: 'Result' }).textContent)).toBeLessThan(
@@ -50,11 +52,13 @@ describe('DuelArena', () => {
     const apply = screen.getByRole('button', { name: 'Aplicar ao Meu ranking' });
     fireEvent.click(screen.getByRole('button', { name: 'Pular' }));
     expect(apply).toBeDisabled();
+    expect(screen.getByText('Duelo pulado.')).toBeVisible();
     fireEvent.click(screen.getByRole('checkbox', { name: 'Atalhos de teclado' }));
     fireEvent.keyDown(window, { key: 'ArrowRight' });
     expect(apply).toBeDisabled();
     fireEvent.click(screen.getByRole('button', { name: 'Empate' }));
     expect(apply).toBeEnabled();
+    expect(screen.getByText('Empate registrado.')).toBeVisible();
   });
 
   it('presents a named, accessible pair', async () => {
