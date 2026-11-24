@@ -21,12 +21,14 @@ export function AlbumSummary({ album, editorial, personal }: SummaryProps): JSX.
       <div className="era-summary__content">
         <div>
           <div className="era-summary__heading">
-            <h3>{album.titulo}</h3>
+            <h3 lang="en">{album.titulo}</h3>
             <span>
               {copy.edicao} · {album.ano}
             </span>
           </div>
-          <p>{copy.estetica}</p>
+          <p className="era-summary__aesthetic">{copy.estetica}</p>
+        </div>
+        <div className="era-summary__notes">
           <p>{copy.descricao}</p>
           <p className="era-summary__highlight">{copy.destaque}</p>
         </div>
