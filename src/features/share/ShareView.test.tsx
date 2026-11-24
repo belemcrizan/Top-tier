@@ -58,7 +58,7 @@ describe('reading and importing a ranking', () => {
     );
   });
 
-  it('imports validated scores atomically after review and preserves them on a corrupt import', async () => {
+  it('reviews imports and preserves saved scores on invalid files', async () => {
     render(wrapped(<ShareFiles />));
     chooseFile(serializeRanking({ 'evermore-02': 42 }));
     const approve = await screen.findByRole('button', { name: 'Usar estas notas' });
