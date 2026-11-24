@@ -1,6 +1,6 @@
 export const sharePt = {
   shareTitle: 'Compartilhar meu ranking',
-  shareIntro: 'Envie a sua seleção para alguém comparar com a própria coleção.',
+  shareIntro: 'Envie suas favoritas em um cartão ou compartilhe o ranking completo por link.',
   shareLinkHeading: 'Compartilhar por link',
   shareLinkLabel: 'Link de leitura',
   shareCopy: 'Copiar link',
@@ -45,7 +45,7 @@ export const sharePt = {
 
 export const shareEn: Record<keyof typeof sharePt, string> = {
   shareTitle: 'Share my ranking',
-  shareIntro: 'Send someone your picks to see how your collections compare.',
+  shareIntro: 'Send your favorites on a card, or share your full ranking with a link.',
   shareLinkHeading: 'Share a link',
   shareLinkLabel: 'Read-only link',
   shareCopy: 'Copy link',
