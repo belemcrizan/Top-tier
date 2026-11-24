@@ -9,7 +9,7 @@ function press(target: Element | Document, code: string): void {
   fireEvent.keyDown(target, { code, key: code === 'Space' ? ' ' : code, bubbles: true });
 }
 
-it('moves to the next measured lane and restores keyboard focus to the relocated track', async () => {
+it('moves a track to the next lane and restores keyboard focus', async () => {
   // jsdom has no layout. dnd-kit needs distinct lane rectangles for real collision detection.
   vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (
     this: HTMLElement,

@@ -19,7 +19,7 @@ export const shellPt = {
   tiers: 'Como ler os tiers',
   method: 'Sobre a curadoria',
   editorialMethod:
-    'As notas consideram a escrita, os arranjos, o impacto emocional e a vontade de ouvir outra vez.',
+    'As notas consideram a escrita, os arranjos, a emoção e a vontade de ouvir outra vez.',
   credits: 'Fontes das tracklists',
   independent: 'Projeto independente de fã, sem afiliação com a artista.',
   intro1: 'Escolha uma era',
