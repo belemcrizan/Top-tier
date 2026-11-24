@@ -27,6 +27,8 @@ function stubImages(problem?: 'decode' | 'network'): void {
 }
 
 afterEach(() => {
+  delete document.documentElement.dataset.fonts;
+  Reflect.deleteProperty(document, 'fonts');
   vi.unstubAllGlobals();
   vi.useRealTimers();
   imagePaths = [];
@@ -35,6 +37,9 @@ afterEach(() => {
 describe('ranking card', () => {
   it('draws each song, decodes each cover once and produces a correctly sized PNG', async () => {
     stubImages();
+    const load = vi.fn().mockResolvedValue([{}]);
+    Object.defineProperty(document, 'fonts', { configurable: true, value: { load } });
+    const styles = vi.spyOn(globalThis, 'getComputedStyle');
     const canvas = document.createElement('canvas');
     const original = document.createElement.bind(document);
     vi.spyOn(document, 'createElement').mockImplementation((name) =>
@@ -56,6 +61,9 @@ describe('ranking card', () => {
       titulo: 'A very long sample title to exercise multiple line breaks',
     };
     expect(await renderCard(tracks, 'Top 5', 'Top Tier')).toBe(data);
+    expect(load).toHaveBeenCalledWith(expect.stringContaining('Playfair Display Variable'));
+    expect(document.documentElement.dataset.fonts).toBe('ready');
+    expect(load.mock.invocationCallOrder[0]).toBeLessThan(styles.mock.invocationCallOrder[0]);
     expect([canvas.width, canvas.height]).toEqual([1080, 1350]);
     expect(ctx.drawImage).toHaveBeenCalledTimes(5);
     expect(imagePaths.length).toBe(new Set(top.map((s) => s.album)).size);

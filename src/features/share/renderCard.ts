@@ -1,4 +1,5 @@
 import type { Song } from '../../data/rankings';
+import { prepareCollectionFonts } from '../../styles/loadFonts';
 import { drawCardCover, loadCardCover } from './cardArt';
 
 const WIDTH = 1080;
@@ -72,15 +73,16 @@ function drawSong(
 export async function renderCard(tracks: Song[], title: string, subtitle: string): Promise<Blob> {
   const top = tracks.slice(0, 5);
   const ids = new Set(top.map((song) => song.album));
+  // A direct link can open this route before the shell's idle font loading.
+  const [covers] = await Promise.all([
+    Promise.all([...ids].map(async (id) => [id, await loadCardCover(id)] as const)),
+    prepareCollectionFonts(),
+  ]);
   const css = getComputedStyle(document.documentElement);
   const fonts = {
     display: css.getPropertyValue('--font-display').trim() || 'Georgia, serif',
     body: css.getPropertyValue('--font-body').trim() || 'sans-serif',
   };
-  const covers = await Promise.all(
-    [...ids].map(async (id) => [id, await loadCardCover(id)] as const),
-  );
-  await document.fonts?.ready;
   const images = new Map(covers);
   const canvas = document.createElement('canvas');
   canvas.width = WIDTH;
