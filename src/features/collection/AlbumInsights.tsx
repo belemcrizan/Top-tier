@@ -79,7 +79,7 @@ export function AlbumInsights({ editorial, personal }: InsightProps): JSX.Elemen
         </div>
         <div>
           <h4>{t('collectionYourMean')}</h4>
-          <p className="insights__mean" aria-label={t('collectionScale')}>
+          <p className="insights__mean">
             {means[1] === null ? '—' : number.format(means[1])}
             <small> / 100</small>
           </p>
