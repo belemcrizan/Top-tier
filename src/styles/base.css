@@ -22,10 +22,10 @@ body {
 }
 [data-era] {
   transition:
-    --era-accent 600ms,
-    --era-soft 600ms,
-    --era-veil 600ms,
-    --era-ink 600ms;
+    --era-accent 220ms,
+    --era-soft 220ms,
+    --era-veil 220ms,
+    --era-ink 220ms;
 }
 button,
 input,
@@ -90,7 +90,6 @@ h2,
 h3,
 .type-display {
   font-family: var(--font-display);
-  font-variation-settings: 'SOFT' 90;
   line-height: 1.12;
   letter-spacing: -0.036em;
   text-wrap: balance;

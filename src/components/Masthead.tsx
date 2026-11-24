@@ -1,4 +1,4 @@
-import { Moon, Sun, Disc3 } from 'lucide-react';
+import { Moon, Sun } from 'lucide-react';
 import type { JSX, MouseEvent } from 'react';
 import { routeHashes } from '../app/routes';
 import type { Page } from '../app/routes';
@@ -23,7 +23,14 @@ export function Masthead({ current, navigate, theme, toggle }: Props): JSX.Eleme
     <header className="masthead">
       <div className="masthead__inner">
         <a className="masthead__brand" href="#colecao" onClick={(e) => follow(e, 'collection')}>
-          <Disc3 aria-hidden="true" size={26} strokeWidth={1.5} /> Top Tier
+          <svg className="masthead__mark" viewBox="0 0 36 36" aria-hidden="true">
+            <path
+              d="M18 1.5c1.1 9.9 4.2 13 14.7 16.5C22.6 20.7 19.3 25 18 34.5
+              16.6 24.8 13.3 21.1 3.3 18 13.4 15 16.9 11.2 18 1.5Z"
+              fill="currentColor"
+            />
+          </svg>
+          <span>Top Tier</span>
         </a>
         <nav aria-label={t('nav')} className="masthead__nav">
           {(Object.keys(routeHashes) as Page[]).map((page) => (

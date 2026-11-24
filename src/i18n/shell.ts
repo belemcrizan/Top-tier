@@ -21,6 +21,7 @@ export const shellPt = {
   editorialMethod:
     'As notas consideram a escrita, os arranjos, a emoção e a vontade de ouvir outra vez.',
   credits: 'Fontes das tracklists',
+  photoCredit: 'Fotografia de folklore por',
   independent: 'Projeto independente de fã, sem afiliação com a artista.',
   intro1: 'Escolha uma era',
   intro2: 'Decida entre duas músicas',
@@ -58,6 +59,7 @@ export const shellEn: Record<keyof typeof shellPt, string> = {
   editorialMethod:
     'Scores reflect the writing, arrangement, emotional impact and desire to listen again.',
   credits: 'Tracklist sources',
+  photoCredit: 'folklore photography by',
   independent: 'An independent fan project, unaffiliated with the artist.',
   intro1: 'Choose an era',
   intro2: 'Choose between two tracks',

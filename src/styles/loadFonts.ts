@@ -2,8 +2,8 @@
 // Waiting on the complete set makes applying the display and body families a single layout change.
 const familyRequests = [
   '400 1em "DM Sans Variable"',
-  '500 1em "Fraunces Variable"',
-  'italic 450 1em "Fraunces Variable"',
+  '500 1em "Playfair Display Variable"',
+  'italic 450 1em "Playfair Display Variable"',
 ];
 
 function afterContentPaint(callback: () => void): void {

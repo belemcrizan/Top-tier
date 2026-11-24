@@ -23,36 +23,6 @@ function palette(theme: Theme, era: string): Palette {
   return colors;
 }
 
-function fogOpacity(layer: string): number {
-  const value = css.match(new RegExp(`--mist-${layer}-opacity:\\s*([0-9.]+);`))?.[1];
-  const opacity = Number(value);
-  if (!Number.isFinite(opacity) || opacity < 0 || opacity > 1) {
-    throw new Error(`Invalid opacity for the ${layer} layer`);
-  }
-  return opacity;
-}
-
-function compositeMist(colors: Palette): string {
-  const rgb = (token: string): number[] => {
-    const hex = colors.get(token);
-    if (!hex) throw new Error(`Missing color: ${token}`);
-    return [0, 2, 4].map((offset) => Number.parseInt(hex.slice(offset, offset + 2), 16));
-  };
-  // All layer centers coinciding gives a conservative bound, including a visible dust particle.
-  const layers = [
-    ['rose', 'hero-mist-rose'],
-    ['rose', 'hero-mist-rose'],
-    ['copper', 'hero-mist-copper'],
-    ['dust', 'hero-muted'],
-  ];
-  let behind = rgb('hero-dark');
-  for (const [layer, token] of layers) {
-    const alpha = fogOpacity(layer);
-    behind = rgb(token).map((channel, i) => channel * alpha + behind[i] * (1 - alpha));
-  }
-  return behind.map((n) => Math.ceil(n).toString(16).padStart(2, '0')).join('');
-}
-
 function luminance(hex: string): number {
   const channels = [0, 2, 4].map((offset) => {
     const value = Number.parseInt(hex.slice(offset, offset + 2), 16) / 255;
@@ -86,13 +56,10 @@ for (const theme of ['light', 'dark'] as const) {
     }
     pair('on-action', 'action');
     pair('era-ink', 'era-soft');
-    colors.set('hero-with-mist', compositeMist(colors));
-    for (const background of ['hero-dark', 'hero-with-mist']) {
-      pair('hero-ink', background);
-      pair('hero-muted', background);
-      pair('hero-btn', background, 3);
-      pair('hero-btn-line', background, 3);
-    }
+    pair('hero-ink', 'hero-dark');
+    pair('hero-muted', 'hero-dark');
+    pair('hero-btn', 'hero-dark', 3);
+    pair('hero-btn-line', 'hero-dark', 3);
     pair('hero-btn-ink', 'hero-btn');
     for (const tier of ['splus', 's', 'a', 'b', 'c']) {
       pair(`tier-${tier}-ink`, `tier-${tier}-surface`);
