@@ -93,8 +93,8 @@
   --tier-c: oklch(66.4209% 0.016169 70.797);
   --on-accent: var(--on-action);
   --muted: var(--ink-muted);
-  --font-body: 'DM Sans Variable', 'Collection Text Fallback', system-ui, sans-serif;
-  --font-display: 'Fraunces Variable', 'Collection Display Fallback', Georgia, serif;
+  --font-body: 'Collection Text Fallback', system-ui, sans-serif;
+  --font-display: 'Collection Display Fallback', Georgia, serif;
   --radius-sm: 8px;
   --radius-md: 14px;
   --radius-lg: 24px;
@@ -228,4 +228,9 @@
   --era-veil: oklch(30.0167% 0.009014 295.023);
   --era-ink: #d8d6df;
   --era-ink: oklch(88.031% 0.012406 296.325);
+}
+
+:root[data-fonts='ready'] {
+  --font-body: 'DM Sans Variable', 'Collection Text Fallback', system-ui, sans-serif;
+  --font-display: 'Fraunces Variable', 'Collection Display Fallback', Georgia, serif;
 }

@@ -4,10 +4,7 @@
   padding: clamp(1.5rem, 5vw, 4rem) 1rem;
 }
 .tier-board__header h1 {
-  font:
-    500 clamp(2.25rem, 6vw, 4.5rem) / 1.05 'Fraunces Variable',
-    Georgia,
-    serif;
+  font: 500 clamp(2.25rem, 6vw, 4.5rem) / 1.05 var(--font-display);
   margin: 0;
 }
 .tier-board__header p {
@@ -73,10 +70,7 @@
   color: var(--ink);
 }
 .tier-board__tier strong {
-  font:
-    500 2rem / 1 'Fraunces Variable',
-    Georgia,
-    serif;
+  font: 500 2rem / 1 var(--font-display);
 }
 .tier-board__tier span {
   font-weight: 500;
