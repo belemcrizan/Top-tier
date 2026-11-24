@@ -6,7 +6,7 @@ import { Application } from './Application';
 import { renderCollection } from '../prerender';
 import { RANKING_KEY, restoreRanking } from '../lib/storage';
 
-it('hydrates the static collection in place and keeps local preferences and legacy scores', async () => {
+it('hydrates in place and preserves preferences and legacy scores', async () => {
   const container = document.createElement('div');
   document.body.append(container);
   container.innerHTML = renderCollection();

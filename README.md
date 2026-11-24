@@ -78,6 +78,9 @@ arredonda e limita o resultado ao intervalo de 0 a 100.
    editorial. Após ampliar o catálogo, revise os testes de integridade das edições e rode
    `npm test`.
 
+O build envia a primeira tela da coleção em HTML, com seus estilos e a ilustração principal.
+O React ativa os controles e recupera as preferências salvas no navegador.
+
 Os dados pessoais ficam no navegador. O carregamento da versão 2 recupera as notas e os favoritos da
 versão 1 no mesmo endereço. Para levar notas a outro navegador ou endereço, exporte o JSON.
 
@@ -144,8 +147,9 @@ that origin. Export score JSON to move between browsers or domains.
 | `e2e/`            | Fluxo de Duelo e compartilhamento / Playwright user journey        |
 | `scripts/`        | Verificações e recursos / Build checks and art generation          |
 
-React and TypeScript render the views. Pure ranking functions keep each position stable when the
-visible tracks change. Hash routes work on a static host. The production service worker caches the
+The build renders the collection to HTML with its styles and hero image. React hydrates that
+initial view and restores local preferences. Pure ranking functions keep each position stable
+when the visible tracks change. Hash routes work on a static host. The production service worker caches the
 app for offline use after its first successful load. The language selector switches the interface
 and editorial commentary between Portuguese and English.
 
