@@ -1,7 +1,7 @@
 import axe from 'axe-core';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import type { ReactElement } from 'react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { RankingProvider, useRanking } from '../../app/RankingProvider';
 import { I18nProvider } from '../../i18n';
 import { songs } from '../../data/rankings';
@@ -60,6 +60,9 @@ describe('DuelArena', () => {
   it('presents a named, accessible pair', async () => {
     const { container } = renderArena();
     expect(within(container).getByRole('progressbar', { name: /Confiança/ })).toBeVisible();
-    expect((await axe.run(container)).violations).toEqual([]);
+    // jsdom has no canvas. The browser E2E and token audit check actual contrast.
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(null);
+    const result = await axe.run(container, { rules: { 'color-contrast': { enabled: false } } });
+    expect(result.violations).toEqual([]);
   });
 });
