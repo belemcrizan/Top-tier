@@ -12,6 +12,7 @@ import { useI18n } from '../i18n';
 import { useRanking } from './RankingProvider';
 import { useTheme } from '../hooks/useTheme';
 import '../styles/components/shell.css';
+import '../styles/components/record-shelf.css';
 
 const DuelArena = lazy(() => import('../features/duel/DuelArena'));
 const TierBoard = lazy(() => import('../features/tierboard/TierBoard'));
