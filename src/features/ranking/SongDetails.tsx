@@ -1,10 +1,11 @@
 import type { JSX } from 'react';
 import { ExternalLink, Heart } from 'lucide-react';
 import { Dialog } from '../../components/Dialog';
+import { albums } from '../../data/rankings';
 import type { Song } from '../../data/rankings';
-import { songText } from '../../data/translations';
+import { albumText, songText } from '../../data/translations';
 import { useI18n } from '../../i18n';
-import { EraEmblem } from '../collection/EraEmblem';
+import { AlbumCover } from '../collection/AlbumCover';
 import { ScoreSlider } from '../personal/ScoreSlider';
 import { TierMark } from './TierMark';
 import { youTubeMusicLink } from './songLink';
@@ -15,6 +16,7 @@ interface Props {
   toggleFavorite?: () => void;
   onClose: () => void;
   onSave?: (score: number) => void;
+  shared: boolean;
 }
 
 export function SongDetails({
@@ -23,21 +25,30 @@ export function SongDetails({
   toggleFavorite,
   onSave,
   onClose,
+  shared,
 }: Props): JSX.Element {
   const { t, lang } = useI18n();
   const { justificativa, contexto } = songText(song, lang);
+  const album = albums.find(({ id }) => id === song.album);
+  const scoreLabel = shared ? 'rankSharedScore' : onSave ? 'rankRate' : 'rankEditorialScore';
   return (
     <Dialog labelledBy="song-details-title" onClose={onClose}>
-      <div className="song-detail__identity">
-        <EraEmblem album={song.album} />
+      <header className="song-detail__identity" data-era={song.album}>
+        <AlbumCover album={song.album} size="detail" className="song-detail__cover" />
         <div>
-          <p>
-            {song.album} · {t('rankTrack')} {song.numeroFaixa}
+          <p className="song-detail__album">
+            {song.album} · {album?.ano}
           </p>
           <h2 id="song-details-title">{song.titulo}</h2>
-          <TierMark tier={song.tier} />
+          <div className="song-detail__track">
+            <TierMark tier={song.tier} />
+            <span>
+              {t('rankTrack')} {String(song.numeroFaixa).padStart(2, '0')}
+            </span>
+            {album && <span>· {albumText(album, lang).edicao}</span>}
+          </div>
         </div>
-      </div>
+      </header>
       <dl className="song-detail__stats">
         <div>
           <dt>{t('rankGlobalPosition')}</dt>
@@ -48,8 +59,11 @@ export function SongDetails({
           <dd>#{song.posicaoNoAlbum}</dd>
         </div>
         <div>
-          <dt>{t('rankScore')}</dt>
-          <dd>{song.pontuacao}/100</dd>
+          <dt>{t(scoreLabel)}</dt>
+          <dd>
+            {song.pontuacao}
+            <small>/100</small>
+          </dd>
         </div>
       </dl>
       <h3>{t('rankRationale')}</h3>

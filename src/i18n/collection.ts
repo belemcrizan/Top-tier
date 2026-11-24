@@ -1,9 +1,11 @@
 export const collectionPt = {
-  collectionSubtitle: 'Coleção musical de Taylor Swift',
+  collectionSubtitle: 'Taylor Swift · Uma coleção de fã',
+  collectionOpening: 'Cada era,',
+  collectionHeroAlt: 'Taylor de casaco entre as árvores altas da floresta, na era folklore.',
   collectionEra: 'era',
   collectionEras: 'eras',
-  collectionTitle: 'um ranking seu.',
-  collectionPitch: 'Descubra a curadoria de {songs} faixas ou escolha suas favoritas em duelos.',
+  collectionTitle: 'uma forma de sentir.',
+  collectionPitch: '{albums} {eras}, {songs} {tracks}. Descubra onde ficam as suas favoritas.',
   collectionDuel: 'Começar um duelo',
   collectionBrowse: 'Explorar álbuns',
   collectionHeading: 'Escolha uma era',
@@ -30,11 +32,13 @@ export const collectionPt = {
 };
 
 export const collectionEn: Record<keyof typeof collectionPt, string> = {
-  collectionSubtitle: 'The Taylor Swift music collection',
+  collectionSubtitle: 'Taylor Swift · A fan collection',
+  collectionOpening: 'Every era,',
+  collectionHeroAlt: 'Taylor in a coat among tall forest trees during the folklore era.',
   collectionEra: 'era',
   collectionEras: 'eras',
-  collectionTitle: 'one ranking of your own.',
-  collectionPitch: 'Explore our picks across {songs} tracks or choose your favorites in a duel.',
+  collectionTitle: 'a different feeling.',
+  collectionPitch: '{albums} {eras}, {songs} {tracks}. Find where your favorites belong.',
   collectionDuel: 'Start a duel',
   collectionBrowse: 'Browse albums',
   collectionHeading: 'Choose an era',

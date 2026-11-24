@@ -113,6 +113,7 @@ export default function RankingView({
         <SongDetails
           key={selected.id}
           song={selected}
+          shared={mode === 'shared'}
           favorite={favorites.includes(selected.id)}
           toggleFavorite={readOnly ? undefined : () => toggleFavorite(selected.id)}
           onSave={canEdit ? save : undefined}

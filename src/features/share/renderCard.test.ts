@@ -1,31 +1,45 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { songs } from '../../data/rankings';
+import { loadCardCover, drawCardCover } from './cardArt';
+import { covers } from '../../visual/media';
 import { downloadBlob } from './download';
 import { renderCard } from './renderCard';
 
 let imagePaths: string[] = [];
 
-function stubImages(fail = false): void {
+function stubImages(problem?: 'decode' | 'network'): void {
   class LocalImage {
     onload?: () => void;
     onerror?: () => void;
+    naturalWidth = 384;
+    naturalHeight = 384;
+    isPhoto = false;
+    decode(): Promise<void> {
+      return problem === 'decode' && this.isPhoto ? Promise.reject(new Error()) : Promise.resolve();
+    }
     set src(path: string) {
+      this.isPhoto = path.endsWith('.webp');
       imagePaths.push(path);
-      queueMicrotask(() => (fail ? this.onerror?.() : this.onload?.()));
+      queueMicrotask(() => (problem === 'network' ? this.onerror?.() : this.onload?.()));
     }
   }
   vi.stubGlobal('Image', LocalImage);
 }
 
 afterEach(() => {
+  delete document.documentElement.dataset.fonts;
+  Reflect.deleteProperty(document, 'fonts');
   vi.unstubAllGlobals();
   vi.useRealTimers();
   imagePaths = [];
 });
 
 describe('ranking card', () => {
-  it('draws each song, loads each emblem once and produces a correctly sized PNG', async () => {
+  it('draws each song, decodes each cover once and produces a correctly sized PNG', async () => {
     stubImages();
+    const load = vi.fn().mockResolvedValue([{}]);
+    Object.defineProperty(document, 'fonts', { configurable: true, value: { load } });
+    const styles = vi.spyOn(globalThis, 'getComputedStyle');
     const canvas = document.createElement('canvas');
     const original = document.createElement.bind(document);
     vi.spyOn(document, 'createElement').mockImplementation((name) =>
@@ -47,16 +61,31 @@ describe('ranking card', () => {
       titulo: 'A very long sample title to exercise multiple line breaks',
     };
     expect(await renderCard(tracks, 'Top 5', 'Top Tier')).toBe(data);
+    expect(load).toHaveBeenCalledWith(expect.stringContaining('Playfair Display Variable'));
+    expect(document.documentElement.dataset.fonts).toBe('ready');
+    expect(load.mock.invocationCallOrder[0]).toBeLessThan(styles.mock.invocationCallOrder[0]);
     expect([canvas.width, canvas.height]).toEqual([1080, 1350]);
     expect(ctx.drawImage).toHaveBeenCalledTimes(5);
     expect(imagePaths.length).toBe(new Set(top.map((s) => s.album)).size);
-    expect(imagePaths.every((path) => path.endsWith('.svg'))).toBe(true);
+    expect(imagePaths.every((path) => path.endsWith('.webp'))).toBe(true);
     expect(ctx.fillText.mock.calls.flat()).not.toContain('Excluded from the top five');
   });
 
-  it('surfaces missing assets, unavailable canvas and failed PNG encoding', async () => {
-    stubImages(true);
-    await expect(renderCard(songs, 'Top 5', 'Top Tier')).rejects.toThrow('Emblem unavailable');
+  it('keeps the card usable after decode and fallback failures', async () => {
+    stubImages('decode');
+    const fallback = await loadCardCover('evermore');
+    expect(fallback).not.toBeNull();
+    expect(imagePaths).toEqual([covers.evermore.card, covers.evermore.fallback]);
+    stubImages('network');
+    const missing = await loadCardCover('evermore');
+    expect(missing).toBeNull();
+    const ctx = { fillRect: vi.fn(), drawImage: vi.fn() };
+    drawCardCover(ctx as unknown as CanvasRenderingContext2D, missing, 'evermore', 2, 4, 136);
+    expect(ctx.fillRect).toHaveBeenCalledWith(2, 4, 136, 136);
+    expect(ctx.drawImage).not.toHaveBeenCalled();
+  });
+
+  it('surfaces unavailable canvas and failed PNG encoding', async () => {
     stubImages();
     const get = vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(null);
     await expect(renderCard([], '', '')).rejects.toThrow('Canvas unavailable');

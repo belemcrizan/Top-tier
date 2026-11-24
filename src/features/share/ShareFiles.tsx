@@ -1,3 +1,4 @@
+import { Download, Upload } from 'lucide-react';
 import { useRef, useState } from 'react';
 import type { ChangeEvent, ReactElement } from 'react';
 import { useRanking } from '../../app/RankingProvider';
@@ -40,7 +41,7 @@ export function ShareFiles(): ReactElement {
   }
 
   return (
-    <section className="share__panel">
+    <section className="share__panel share__files">
       <h2>{t('shareFiles')}</h2>
       <p>{t('shareFilesHelp')}</p>
       <div className="share__actions">
@@ -51,9 +52,11 @@ export function ShareFiles(): ReactElement {
             downloadBlob(blob, 'top-tier.json');
           }}
         >
+          <Download size={16} aria-hidden="true" />
           {t('shareExport')}
         </button>
         <button type="button" onClick={() => fileInput.current?.click()}>
+          <Upload size={16} aria-hidden="true" />
           {t('shareImport')}
         </button>
         <input

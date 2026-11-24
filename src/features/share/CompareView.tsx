@@ -4,6 +4,7 @@ import { useRanking } from '../../app/RankingProvider';
 import { songs } from '../../data/rankings';
 import type { Song } from '../../data/rankings';
 import { useI18n } from '../../i18n';
+import { AlbumCover } from '../collection/AlbumCover';
 import { personalizeSongs } from '../../lib/ranking';
 import type { PersonalScores } from '../../lib/ranking';
 import { kendallTau } from '../../lib/stats';
@@ -25,7 +26,11 @@ function PositionList({ entries, other }: { entries: Song[]; other?: Song[] }): 
             <span className="compare__number" aria-hidden="true">
               {index + 1}
             </span>
-            <span className="compare__name">{song.titulo}</span>
+            <AlbumCover album={song.album} size="thumb" className="compare__cover" />
+            <span className="compare__caption">
+              <span className="compare__name">{song.titulo}</span>
+              <span className="compare__album">{song.album}</span>
+            </span>
             {other && (
               <span className="compare__shift">
                 <span aria-hidden="true">

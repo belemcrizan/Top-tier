@@ -11,6 +11,7 @@ export default tseslint.config(
       'dist/**',
       'coverage/**',
       'playwright-report/**',
+      'visual-report/**',
       'test-results/**',
       '.lighthouseci/**',
       'lighthouse-report/**',

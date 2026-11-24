@@ -32,4 +32,23 @@ test('the installed collection reopens offline from its deployment subpath', asy
   await context.setOffline(true);
   await page.reload();
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+  const media = await page.locator('img.room__art, .era-card img').evaluateAll(async (nodes) => {
+    const urls = new Set(
+      nodes
+        .flatMap((node) =>
+          (node.getAttribute('srcset') || '')
+            .split(',')
+            .map((candidate) => candidate.trim().split(' ')[0]),
+        )
+        .filter(Boolean),
+    );
+    return Promise.all(
+      [...urls].map(async (url) => {
+        const response = await fetch(url, { cache: 'no-store' });
+        return response.ok && response.headers.get('content-type')?.includes('image/webp');
+      }),
+    );
+  });
+  expect(media.length).toBeGreaterThan(3);
+  expect(media.every(Boolean)).toBe(true);
 });

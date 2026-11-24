@@ -11,7 +11,7 @@ it('hydrates in place and preserves preferences and legacy scores', async () => 
   document.body.append(container);
   container.innerHTML = renderCollection();
   const heading = within(container).getByRole('heading', { level: 1 });
-  expect(heading).toHaveTextContent('Três eras');
+  expect(heading).toHaveTextContent('Cada era,');
   expect(container.querySelector('img.room__art')).toHaveAttribute('fetchpriority', 'high');
   localStorage.setItem('top-tier:theme:v1', 'dark');
   localStorage.setItem('top-tier:guide:v2', 'true');

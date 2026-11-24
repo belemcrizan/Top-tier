@@ -1,3 +1,4 @@
+import { Link2 } from 'lucide-react';
 import { useMemo, useRef, useState } from 'react';
 import type { ReactElement } from 'react';
 import { useRanking } from '../../app/RankingProvider';
@@ -81,29 +82,28 @@ function MyShare(): ReactElement {
         <p>{t('shareIntro')}</p>
       </header>
       <div className="share__workbench">
-        <div className="share__controls">
-          <section className="share__panel">
-            <h2>{t('shareLinkHeading')}</h2>
-            <p>{t('shareSnapshot')}</p>
-            <label className="share__label" htmlFor="share-link">
-              {t('shareLinkLabel')}
-            </label>
-            <div className="share__link-row">
-              <input id="share-link" type="text" ref={input} value={link} readOnly />
-              <button
-                type="button"
-                className="share__primary"
-                onClick={() => {
-                  void copy();
-                }}
-              >
-                {t('shareCopy')}
-              </button>
-            </div>
-          </section>
-          <ShareFiles />
-        </div>
+        <section className="share__panel share__links">
+          <h2>{t('shareLinkHeading')}</h2>
+          <p>{t('shareSnapshot')}</p>
+          <label className="share__label" htmlFor="share-link">
+            {t('shareLinkLabel')}
+          </label>
+          <div className="share__link-row">
+            <input id="share-link" type="text" ref={input} value={link} readOnly />
+            <button
+              type="button"
+              className="share__primary"
+              onClick={() => {
+                void copy();
+              }}
+            >
+              <Link2 size={16} aria-hidden="true" />
+              {t('shareCopy')}
+            </button>
+          </div>
+        </section>
         <ShareCard tracks={personalSongs} />
+        <ShareFiles />
       </div>
     </section>
   );

@@ -1,11 +1,11 @@
 .insights {
-  margin-top: var(--space-4);
+  padding-inline: clamp(1rem, 2vw, 1.7rem);
   border-top: 1px solid var(--line);
 }
 .insights summary {
   display: flex;
   align-items: center;
-  width: fit-content;
+  width: 100%;
   gap: var(--space-2);
   color: var(--era-ink);
   font-size: var(--size-sm);
@@ -17,7 +17,8 @@
   display: none;
 }
 .insights__chevron {
-  transition: transform var(--fast) var(--ease);
+  margin-left: auto;
+  transition: transform 180ms ease;
 }
 .insights[open] .insights__chevron {
   transform: rotate(180deg);

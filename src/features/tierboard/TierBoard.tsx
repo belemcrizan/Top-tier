@@ -13,12 +13,13 @@ import type { Announcements, CollisionDetection, DragEndEvent } from '@dnd-kit/c
 import { useState } from 'react';
 import type { ReactElement } from 'react';
 import { useRanking } from '../../app/RankingProvider';
-import type { Tier } from '../../data/rankings';
+import type { Song, Tier } from '../../data/rankings';
 import { TIER_SCALE } from '../../data/tiers';
 import { useI18n } from '../../i18n';
 import { destinationTier, midpoint, tierCoordinates } from './moves';
 import { MoveForm } from './MoveForm';
 import { TierLane } from './TierLane';
+import { TrackArtwork } from './TrackArtwork';
 import './tierboard.css';
 
 const findLane: CollisionDetection = (input) =>
@@ -27,13 +28,14 @@ const findLane: CollisionDetection = (input) =>
 export default function TierBoard(): ReactElement {
   const { personalSongs, setScore, notify } = useRanking();
   const { t } = useI18n();
-  const [dragged, setDragged] = useState('');
+  const [dragged, setDragged] = useState<Song | null>(null);
   const sensors = useSensors(
     useSensor(MouseSensor, { activationConstraint: { distance: 6 } }),
     useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 8 } }),
     useSensor(KeyboardSensor, { coordinateGetter: tierCoordinates }),
   );
-  const songName = (id: unknown) => personalSongs.find((song) => song.id === id)?.titulo ?? '';
+  const getSong = (id: unknown) => personalSongs.find((song) => song.id === id);
+  const songName = (id: unknown) => getSong(id)?.titulo ?? '';
   const announcements: Announcements = {
     onDragStart: ({ active }) => t('boardGrabbed') + ' · ' + songName(active.id),
     onDragOver: ({ over }) => (over ? t('boardOver') + ' · ' + String(over.id) : undefined),
@@ -49,7 +51,7 @@ export default function TierBoard(): ReactElement {
     notify([t('boardMoved'), songName(id), tier, score + '/100'].join(' · '));
   }
   function drop({ active, over, activatorEvent }: DragEndEvent): void {
-    setDragged('');
+    setDragged(null);
     const tier = destinationTier(over?.id);
     if (!tier || typeof active.id !== 'string') return;
     const id = active.id;
@@ -74,8 +76,8 @@ export default function TierBoard(): ReactElement {
           announcements,
           screenReaderInstructions: { draggable: t('boardInstructions') },
         }}
-        onDragStart={({ active }) => setDragged(songName(active.id))}
-        onDragCancel={() => setDragged('')}
+        onDragStart={({ active }) => setDragged(getSong(active.id) ?? null)}
+        onDragCancel={() => setDragged(null)}
         onDragEnd={drop}
       >
         <div className="tier-board__lanes">
@@ -89,7 +91,11 @@ export default function TierBoard(): ReactElement {
           ))}
         </div>
         <DragOverlay dropAnimation={null}>
-          {dragged && <span className="tier-board__chip tier-board__chip--overlay">{dragged}</span>}
+          {dragged && (
+            <span className="tier-board__chip tier-board__chip--overlay" aria-hidden="true">
+              <TrackArtwork song={dragged} />
+            </span>
+          )}
         </DragOverlay>
       </DndContext>
     </section>

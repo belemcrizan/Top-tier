@@ -3,6 +3,9 @@ import { sources } from '../data/rankings';
 import { TIER_SCALE } from '../data/tiers';
 import { useI18n } from '../i18n';
 
+const photoSource =
+  'https://www.vogue.mx/estilo-de-vida/articulo/' + 'taylor-swift-y-su-nuevo-disco-folklore';
+
 export function Colophon(): JSX.Element {
   const { t } = useI18n();
   return (
@@ -26,6 +29,9 @@ export function Colophon(): JSX.Element {
             </li>
           ))}
         </ul>
+        <p className="colophon__image-credit">
+          {t('photoCredit')} Beth Garrabrant · <a href={photoSource}>Vogue México</a>
+        </p>
       </details>
       <div className="colophon__credit">
         <span>Crizan Belem Ribeiro · {t('independent')}</span>

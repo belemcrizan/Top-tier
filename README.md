@@ -69,7 +69,8 @@ arredonda e limita o resultado ao intervalo de 0 a 100.
 1. Edite `songSeeds` em `src/data/songs.ts`. Informe álbum, número da faixa na edição, título, nota
    inteira de 0 a 100, `justificativa` e `contexto`. Atualize as traduções em `translations.ts`.
 2. Para incluir um álbum, acrescente o ID em `types.ts`, os metadados e `ordemReferencia` em
-   `albums.ts`, o emblema em `public/images/` e a fonte da tracklist em `sources.ts`.
+   `albums.ts`, as capas em `public/images/`, suas referências em `src/visual/media.ts` e a fonte da
+   tracklist em `sources.ts`.
 3. A aplicação deriva tier e posições da nota. O campo `id` usa o álbum e o número original da
    faixa. Preserve esses valores ao editar uma música existente para manter notas e favoritos já
    salvos. O ID de _champagne problems_, por exemplo, é `evermore-02`.
@@ -78,8 +79,8 @@ arredonda e limita o resultado ao intervalo de 0 a 100.
    editorial. Após ampliar o catálogo, revise os testes de integridade das edições e rode
    `npm test`.
 
-O build envia a primeira tela da coleção em HTML, com seus estilos e a ilustração principal.
-O React ativa os controles e recupera as preferências salvas no navegador.
+O build envia a primeira tela da coleção em HTML, com seus estilos e a fotografia principal. O React
+ativa os controles e recupera as preferências salvas no navegador.
 
 Os dados pessoais ficam no navegador. O carregamento da versão 2 recupera as notas e os favoritos da
 versão 1 no mesmo endereço. Para levar notas a outro navegador ou endereço, exporte o JSON.
@@ -122,8 +123,9 @@ build hosted in this repository’s Pages subdirectory.
   midpoint. Share a read-only link, export or import score JSON, or download a top-five image.
 - Edit `songSeeds` in `src/data/songs.ts` to change a score, track title or Portuguese commentary.
   Update the matching English copy in `src/data/translations.ts`. To add an album, update the
-  `AlbumId` type, album metadata, emblem and catalog sources. Keep the original album and track
-  number stable when editing. They form the persistent ID used by favorites and personal scores.
+  `AlbumId` type, album metadata, image references and catalog sources. Keep the original album and
+  track number stable when editing. They form the persistent ID used by favorites and personal
+  scores.
 - `TIER_SCALE` in `src/data/tiers.ts` defines labels, boundaries and classification. Positions are
   computed before filtering. Editorial ties follow collection order and original track number.
   Personal ties follow editorial position. Run the catalog tests whenever changing release scope.
@@ -143,15 +145,15 @@ that origin. Export score JSON to move between browsers or domains.
 | `src/lib/`        | Ranking, persistência e Kendall τ / Pure rules and storage parsing |
 | `src/i18n/`       | Textos da interface em português e inglês / Typed UI dictionaries  |
 | `src/styles/`     | Tokens e componentes visuais / Shared design tokens and CSS        |
-| `public/`         | Emblemas e ícones originais / Original era art and app icons       |
+| `public/`         | Capas, fotografia e ícones / Album covers, photography and icons   |
 | `e2e/`            | Fluxo de Duelo e compartilhamento / Playwright user journey        |
 | `scripts/`        | Verificações e recursos / Build checks and art generation          |
 
-The build renders the collection to HTML with its styles and hero image. React hydrates that
-initial view and restores local preferences. Pure ranking functions keep each position stable
-when the visible tracks change. Hash routes work on a static host. The production service worker
-caches the app for offline use after its first successful load. The language selector switches
-the interface and editorial commentary between Portuguese and English.
+The build renders the collection to HTML with its styles and hero image. React hydrates that initial
+view and restores local preferences. Pure ranking functions keep each position stable when the
+visible tracks change. Hash routes work on a static host. The production service worker caches the
+app for offline use after its first successful load. The language selector switches the interface
+and editorial commentary between Portuguese and English.
 
 **Autor / Author** · Crizan Belem Ribeiro. Projeto independente de fã, sem afiliação. Independent,
 unaffiliated fan project. A licença MIT abrange o código. The MIT license covers the code.

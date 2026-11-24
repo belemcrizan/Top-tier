@@ -1,3 +1,4 @@
+import { ImageDown } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import type { ReactElement } from 'react';
 import { useI18n } from '../../i18n';
@@ -58,7 +59,7 @@ export function ShareCard({ tracks }: { tracks: Song[] }): ReactElement {
   return (
     <section className="share__panel share__card">
       <h2>{title}</h2>
-      <p>{t('shareCardMeta')}</p>
+      <p className="share__card-meta">{t('shareCardMeta')}</p>
       <figure className="share__preview">
         {image && <img src={image.url} width={1080} height={1350} alt={t('shareCardPreview')} />}
         <ol className={image ? 'share__sr' : 'share__top-five'}>
@@ -77,6 +78,7 @@ export function ShareCard({ tracks }: { tracks: Song[] }): ReactElement {
           void save();
         }}
       >
+        <ImageDown size={17} aria-hidden="true" />
         {t('shareCardSave')}
       </button>
     </section>

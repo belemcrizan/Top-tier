@@ -2,8 +2,8 @@
 // Waiting on the complete set makes applying the display and body families a single layout change.
 const familyRequests = [
   '400 1em "DM Sans Variable"',
-  '500 1em "Fraunces Variable"',
-  'italic 450 1em "Fraunces Variable"',
+  '500 1em "Playfair Display Variable"',
+  'italic 450 1em "Playfair Display Variable"',
 ];
 
 function afterContentPaint(callback: () => void): void {
@@ -28,7 +28,8 @@ function afterContentPaint(callback: () => void): void {
   requestAnimationFrame(() => requestAnimationFrame(callback));
 }
 
-async function activateFonts(): Promise<void> {
+export async function prepareCollectionFonts(): Promise<void> {
+  if (!document.fonts?.load || document.documentElement.dataset.fonts === 'ready') return;
   try {
     const loaded = await Promise.all(familyRequests.map((query) => document.fonts.load(query)));
     if (loaded.every((faces) => faces.length > 0)) document.documentElement.dataset.fonts = 'ready';
@@ -42,9 +43,9 @@ export function loadCollectionFonts(): void {
   const schedule = (): void => {
     afterContentPaint(() => {
       if (typeof window.requestIdleCallback === 'function') {
-        window.requestIdleCallback(() => void activateFonts(), { timeout: 1500 });
+        window.requestIdleCallback(() => void prepareCollectionFonts(), { timeout: 1500 });
       } else {
-        requestAnimationFrame(() => void activateFonts());
+        requestAnimationFrame(() => void prepareCollectionFonts());
       }
     });
   };

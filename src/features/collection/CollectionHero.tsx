@@ -1,7 +1,8 @@
-import { Disc3, Swords } from 'lucide-react';
+import { ArrowDown, Swords } from 'lucide-react';
 import type { JSX } from 'react';
 import { useI18n } from '../../i18n';
 import { numeroPorExtenso } from '../../lib/format';
+import { heroPhotos, heroSrcSet } from '../../visual/media';
 
 interface HeroProps {
   albumCount: number;
@@ -12,44 +13,47 @@ interface HeroProps {
 export function CollectionHero({ albumCount, trackCount, browse }: HeroProps): JSX.Element {
   const { t, lang } = useI18n();
   const amount = numeroPorExtenso(albumCount, lang);
-  const headline = amount.charAt(0).toLocaleUpperCase(lang) + amount.slice(1);
+  const intro = t('collectionPitch')
+    .replace('{albums}', amount.charAt(0).toLocaleUpperCase(lang) + amount.slice(1))
+    .replace('{eras}', t(albumCount === 1 ? 'collectionEra' : 'collectionEras'))
+    .replace('{songs}', numeroPorExtenso(trackCount, lang))
+    .replace('{tracks}', t(trackCount === 1 ? 'collectionTrack' : 'collectionTracks'));
+
   return (
     <section className="room" aria-labelledby="room-title">
-      <div className="room__mist" aria-hidden="true">
-        <i />
-        <i />
-        <i />
-      </div>
+      <figure className="room__photo">
+        <img
+          className="room__art"
+          width={1728}
+          height={972}
+          alt={t('collectionHeroAlt')}
+          fetchPriority="high"
+          src={heroPhotos.medium}
+          srcSet={heroSrcSet}
+          sizes="(max-width: 600px) 100vw, 62vw"
+        />
+        <figcaption className="room__credit">
+          <i lang="en">folklore</i>
+          <span aria-hidden="true"> / </span>
+          Beth Garrabrant
+        </figcaption>
+      </figure>
       <div className="room__copy">
-        <p className="room__artist">
-          <Disc3 size={16} />
-          {t('collectionSubtitle')}
-        </p>
+        <p className="room__artist">{t('collectionSubtitle')}</p>
         <h1 id="room-title">
-          {headline} {t(albumCount === 1 ? 'collectionEra' : 'collectionEras')},
-          <em>{t('collectionTitle')}</em>
+          {t('collectionOpening')} <em>{t('collectionTitle')}</em>
         </h1>
-        <p className="room__intro">
-          {t('collectionPitch').replace('{songs}', numeroPorExtenso(trackCount, lang))}
-        </p>
+        <p className="room__intro">{intro}</p>
         <div className="room__actions">
+          <button type="button" className="room__browse" onClick={browse}>
+            {t('collectionBrowse')} <ArrowDown size={16} aria-hidden="true" />
+          </button>
           <a href="#duelo" className="room__duel">
-            <Swords size={18} />
+            <Swords size={16} aria-hidden="true" />
             {t('collectionDuel')}
           </a>
-          <button type="button" onClick={browse}>
-            {t('collectionBrowse')}
-          </button>
         </div>
       </div>
-      <img
-        className="room__art"
-        width={590}
-        height={365}
-        alt=""
-        fetchPriority="high"
-        src={`${import.meta.env.BASE_URL}images/listening-room.svg`}
-      />
     </section>
   );
 }

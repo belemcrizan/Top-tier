@@ -22,9 +22,10 @@ export function prerenderCollection(base: string): Plugin {
             renderCollection: () => string;
           };
           let rendered = renderCollection();
-          // Discover the LCP artwork in the first HTML bytes, ahead of all styles or modules.
+          // Move React's complete responsive preload, including imageSrcSet and imageSizes.
+          // Synthesizing a separate href would download the wrong size on smaller screens.
           const hero = rendered.match(
-            /<link rel="preload" as="image"[^>]*fetchpriority="high"[^>]*>/i,
+            /<link\b(?=[^>]*rel="preload")(?=[^>]*as="image")(?=[^>]*fetchpriority="high")[^>]*>/i,
           );
           if (hero) {
             rendered = rendered.replace(hero[0], '');
