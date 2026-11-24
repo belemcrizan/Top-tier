@@ -57,6 +57,9 @@ export async function captureScreens(
   });
   async function open(hash: string): Promise<void> {
     await page.goto(`${url}${hash}`);
+    // Hash navigation can resolve before React swaps the route and the lazy chunk is ready.
+    const active = page.locator(`.masthead__nav a[href="${hash || '#colecao'}"]`);
+    await expect(active).toHaveAttribute('aria-current', 'page');
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
     await expect(page.locator('html')).toHaveAttribute('data-fonts', 'ready');
   }
